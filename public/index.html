@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GPT Ads Portal</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --panel: #ffffff;
+      --ink: #1d2430;
+      --muted: #667085;
+      --line: #d8dee8;
+      --accent: #0f766e;
+      --accent-2: #b42318;
+      --chip: #eef4ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      letter-spacing: 0;
+    }
+    header {
+      background: #182230;
+      color: #fff;
+      padding: 24px;
+    }
+    .wrap { max-width: 1180px; margin: 0 auto; }
+    .top {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+    h1 { margin: 0; font-size: 28px; line-height: 1.2; }
+    .subtitle { margin: 8px 0 0; color: #ccd5e1; font-size: 14px; }
+    .generated { color: #ccd5e1; font-size: 13px; }
+    main { padding: 22px 24px 48px; }
+    .toolbar {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) auto auto;
+      gap: 10px;
+      margin: 0 0 18px;
+      align-items: center;
+    }
+    input, select {
+      width: 100%;
+      min-height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 10px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .stat strong { display: block; font-size: 22px; }
+    .stat span { color: var(--muted); font-size: 13px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    article {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 0;
+    }
+    .meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--chip);
+      color: #1849a9;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .importance-S, .importance-A { background: #fef3f2; color: var(--accent-2); }
+    .importance-B { background: #fffaeb; color: #b54708; }
+    .importance-C { background: #f2f4f7; color: #475467; }
+    h2 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+    p { margin: 0; color: #344054; line-height: 1.65; }
+    ul { margin: 0; padding-left: 20px; color: #344054; line-height: 1.55; }
+    .source-link {
+      margin-top: auto;
+      color: var(--accent);
+      font-weight: 700;
+      text-decoration: none;
+      overflow-wrap: anywhere;
+    }
+    .empty {
+      padding: 28px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--muted);
+    }
+    @media (max-width: 780px) {
+      header { padding: 20px 16px; }
+      main { padding: 16px; }
+      .toolbar { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid { grid-template-columns: 1fr; }
+      h1 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap top">
+      <div>
+        <h1>GPT Ads Portal</h1>
+        <p class="subtitle">GPT広告・AI広告・生成AIマーケティングの自動収集レポート</p>
+      </div>
+      <div class="generated" id="generated"></div>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="toolbar" aria-label="filters">
+      <input id="query" type="search" placeholder="キーワードで検索">
+      <select id="source">
+        <option value="">すべての媒体</option>
+      </select>
+      <select id="importance">
+        <option value="">すべての重要度</option>
+        <option value="S">重要度 S</option>
+        <option value="A">重要度 A</option>
+        <option value="B">重要度 B</option>
+        <option value="C">重要度 C</option>
+      </select>
+    </section>
+    <section class="stats" id="stats"></section>
+    <section class="grid" id="items"></section>
+  </main>
+  <script>
+    const DATA = {"generatedAt": "2026-07-03T17:02:23", "items": [{"source": "youtube", "title": "ChatGPT Ads Explained | The Future of AI Advertising Has Already Started", "url": "https://www.youtube.com/watch?v=Jl5mdfCeMIU", "text": "ChatGPT Ads are changing the future of digital advertising faster than most businesses realise.\n\nAs platforms like ChatGPT, OpenAI, Google Gemini, Microsoft Copilot and conversational AI search engines continue changing how people search, compare and make buying decisions, businesses need to understand how advertising inside artificial intelligence environments will work.\n\nAt AIIMS Group, we are actively helping brands prepare for the next generation of AI advertising infrastructure.\n\nTraditional Google Ads focus on keywords.\n\nChatGPT Advertising focuses on conversational intent.\n\nThat changes everything.\n\nIn this video we explain:\n\n• What ChatGPT Ads are  \n• How AI advertising will work  \n• Why conversational AI is changing search forever  \n• How OpenAI advertising may evolve  \n• Why businesses need to prepare now  \n• The future of AI search advertising  \n• How brands can build visibility inside AI engines  \n\nAIIMS Group is a global AI, SEO, performance marketing and digital infrastructure company helping brands adapt to the next generation of discovery.\n\nLearn more about our services:\n\nChatGPT Ads Agency  \nhttps://aiims.group/services/ai-marketing-services/chatgpt-ads-ai-advertising-agency/\n\nAI Marketing Services  \nhttps://aiims.group/services/ai-marketing-services/\n\nGenerative Engine Optimisation Services  \nhttps://aiims.group/generative-engine-optimisation-services/\n\nAI SEO Services Australia  \nhttps://aiims.group/services/ai-marketing-services/ai-seo-services-australia/\n\nWe believe the future of digital marketing is no longer search.\n\nIt is artificial intelligence driven discovery.\n\nSubscribe to AIIMS Group for more AI marketing insights, AI advertising strategies and enterprise digital growth systems.\n\n#ChatGPTAds #AIAdvertising #OpenAIAdvertising #AISEO #GenerativeEngineOptimisation #AIIMSGroup", "author": "AIIMS™ Group", "published_at": "2026-07-03T06:30:40Z", "category": "AI広告・ChatGPT広告・生成AI活用", "importance": "S", "summary": "ChatGPTなどの会話型AI環境における広告の仕組みが急速に変わっている。従来のGoogle広告がキーワード中心であるのに対し、ChatGPT広告は会話型インテントに焦点を当てている。OpenAI、Google Gemini、Microsoft Copilotなどのプラットフォームの台頭により、企業は次世代のAI広告インフラに対応する必要がある。", "points": ["ChatGPT広告は従来のキーワード検索ではなく、ユーザーの会話型インテント（意図）に基づいた広告配信を実現する", "AI駆動型ディスカバリーが今後のデジタルマーケティングの中心となり、従来の検索中心のモデルから転換する", "企業は生成エンジン最適化（Generative Engine Optimisation）やAI SEOなどの新しい戦略を今から準備する必要がある"], "metrics": {"views": 56}, "id": "539e3055552a7aa7"}, {"source": "blog", "title": "AI Agent を使用したコールドアウトリーチキャンペーンの構築方法", "url": "https://www.marketingaiinstitute.com/blog/podcast-ai-agents", "text": "We had a campaign we wanted to get in front of the right people. The problem was familiar: We had a targeted list of business leaders we genuinely thought would benefit from what we were promoting, but no clean process for actually reaching them at scale. And we didn’t have enough time to do it the slow way [read: without AI].", "author": "Marketing AI Institute", "published_at": "2026-06-10T13:30:00+00:00", "category": "AI広告・広告運用・生成AI活用", "importance": "A", "summary": "AI Agent を活用したコールドアウトリーチキャンペーンの実装方法について解説しています。ターゲットとなるビジネスリーダーのリストを保有していても、スケーラブルな到達プロセスが課題となるケースに対して、AI を活用した効率的なアプローチを提案しています。従来の手動プロセスでは時間がかかるため、AI による自動化が重要な解決策となります。", "points": ["AI Agent を使用することで、ターゲットリストへの大規模な到達プロセスを自動化・効率化できる", "手動によるコールドアウトリーチの時間的制約を AI 活用により克服可能", "適切なターゲットオーディエンスへのメッセージ配信を AI が支援し、キャンペーン効果を向上させる"], "metrics": {}, "id": "0e2dad2eec16ce80"}, {"source": "blog", "title": "AIを思考パートナーとして活用する時代へ", "url": "https://www.marketingaiinstitute.com/blog/ai-b2b-marketers-summit-thought-partner", "text": "Most marketers have a transactional relationship with AI, A. Lee Judge says. They put in a request. They get out an asset. They edit it until it sounds like their voice or their brand’s. Then, they repeat.  \n But   Judge  ,  founder of B2B content marketing and production company Content Monsta, explains   AI isn’t meant to replace human content creators; it’s meant to elevate them.", "author": "Marketing AI Institute", "published_at": "2026-06-11T13:30:00+00:00", "category": "AI活用戦略・マーケティング", "importance": "A", "summary": "多くのマーケターはAIとの関係が取引的になっており、リクエストを出して成果物を受け取るという単純な使い方に留まっている。しかし、Content Monstaの創業者A. Lee Judgeは、AIは人間のコンテンツクリエイターを置き換えるのではなく、彼らを高めるためのツールであると主張している。AIを思考パートナーとして活用することで、マーケティングの質を向上させることができる。", "points": ["現在のマーケターのAI活用は取引的で、リクエスト→成果物→編集というサイクルに限定されている", "AIはコンテンツクリエイターの代替ではなく、人間の能力を拡張・向上させるパートナーとして機能すべき", "AIを思考パートナーとして活用することで、より戦略的で創造的なマーケティング活動が実現可能"], "metrics": {}, "id": "d88d5e8623c07fed"}, {"source": "blog", "title": "How ChatGPT adoption has expanded", "url": "https://openai.com/index/how-chatgpt-adoption-has-expanded", "text": "New OpenAI Signals data shows how ChatGPT adoption is growing globally, with users increasing usage, exploring more capabilities, and driving growth across regions and languages.", "author": "OpenAI News", "published_at": "2026-06-30T09:00:00+00:00", "category": "生成AI活用", "importance": "A", "summary": "OpenAIが公開した最新データによると、ChatGPTの採用が世界規模で拡大しており、ユーザー数の増加と利用頻度の向上が確認されている。地域別・言語別での成長が加速し、ユーザーがプラットフォームの多様な機能を積極的に探索している状況が明らかになった。これはAI活用の市場拡大とマーケティング機会の増加を示唆している。", "points": ["ChatGPTのグローバルユーザー数が継続的に増加し、採用率が拡大している", "ユーザーが機能探索を積極的に行い、プラットフォームの利用深度が向上している", "地域別・言語別での成長が多地域で確認され、国際的なマーケティング機会が拡大している"], "metrics": {}, "id": "068c9bc43551fee5"}, {"source": "blog", "title": "The Bear's Final Season: Disney Shows への広告スポンサーシップ売上と影響", "url": "https://www.adweek.com/convergent-tv/how-the-bear-helped-cook-up-new-ad-interest-in-disney-shows/", "text": "The Bear's final season sold out its sponsorships, but its influence goes well beyond the TV screen for FX and Disney.", "author": "Adweek AI", "published_at": "2026-07-02T14:57:28+00:00", "category": "広告運用・マーケティング戦略", "importance": "A", "summary": "FXとDisneyの人気ドラマ『The Bear』の最終シーズンがスポンサーシップを完売し、テレビ画面を超えた広告効果を生み出している。このコンテンツの高い人気度がブランドスポンサーの関心を集め、Disney傘下の他のショーへの広告需要も喚起している。コンテンツの質と視聴者エンゲージメントが広告価値を大きく左右することを示す事例である。", "points": ["高人気コンテンツ（『The Bear』）のスポンサーシップ完売により、プレミアム広告枠の需要と価値が証明された", "単一番組の成功が親企業Disney傘下の他のショーへの広告関心を波及させるハロー効果を生成", "コンテンツマーケティングとスポンサーシップ戦略において、視聴者エンゲージメント率が重要な指標となることを実証"], "metrics": {}, "id": "733a7f1fd9e4ccac"}, {"source": "blog", "title": "Your Brand Reputation Precedes You With AI, Whether You Like It or Not", "url": "https://www.marketingaiinstitute.com/blog/brand-reputation-ai-b2b-marketers-summit", "text": "Marketers, take note: New research using 2.7 million data points from the 2026 Winter Olympics revealed how AI systems form and preserve narratives about brands, athletes, and organizations.", "author": "Marketing AI Institute", "published_at": "2026-06-15T13:30:00+00:00", "category": "AI広告・マーケティング", "importance": "A", "summary": "2026年冬季オリンピックの270万データポイントを用いた新しい研究により、AIシステムがブランド、アスリート、組織に関する物語をどのように形成・保持するかが明らかになった。マーケターはAIが生成するブランドナラティブの影響を理解し、評判管理戦略を再考する必要がある。", "points": ["AIシステムは大規模データセットから自動的にブランドナラティブを形成・保持する", "ブランド評判管理においてAIの役割と影響を無視できない時代になった", "マーケターはAI生成ナラティブに対する能動的な対策が必要"], "metrics": {}, "id": "6d21679bae310220"}, {"source": "youtube", "title": "AIに広告が出せるようになりました！", "url": "https://www.youtube.com/watch?v=GVk_aElQ-bQ", "text": "ついにキタ、ChatGPTに広告が出せる時代🍳\n本日の献立は「ChatGPT広告」。3分でサクッと出稿していきます。\n\n▼今日の手順（3ステップ）\n①アカウント作成\n②配信設定&予算セット\n③配信ボタンをポチ\n\n「難しそう」で止まってる人こそ、まず動画マネしてみて👀\n保存しておくと出稿するとき迷いません📌\nできた/やってみたい人はコメントで教えて！\n\n#ai #chatgpt  #chatgpt広告 #OpenAI広告 #AI広告 #chatgpt活用  #生成ai  #ai研修  #中小企業  #aiスパルタン #youtubeshorts", "author": "AIスパルタン【 THE VS 】", "published_at": "2026-07-03T01:03:28Z", "category": "GPT広告・AI広告", "importance": "A", "summary": "ChatGPTプラットフォームへの広告出稿が可能になったことを紹介する動画。アカウント作成から配信設定、予算設定、出稿までの3ステップを3分で解説している。難しいと感じている初心者向けに、実践的な手順を提示し、実際の出稿を促している。", "points": ["ChatGPT広告の出稿が新たに可能になり、シンプルな3ステップ（アカウント作成→配信設定&予算セット→配信実行）で実施できる", "初心者向けの実践的なチュートリアル動画であり、難しいと感じている層に対して行動を促すコンテンツ", "中小企業やAI活用初心者を対象とした生成AI広告活用の啓発コンテンツ"], "metrics": {"views": 1749}, "id": "bace8fca16380003"}, {"source": "youtube", "title": "ChatGPT広告の最速作業風景動画", "url": "https://www.youtube.com/watch?v=fx3koj3BjoA", "text": "2026年6月29日に、Chat GPT広告が日本でもローンチされました。この動画では、Chat GPT広告のキャンペーン作成から、1日後のレポートの表示までの作業の様子を公開します。\n\nサムネイルとナレーションはAIも活用させていただいています。", "author": "SEM Technology", "published_at": "2026-06-30T14:33:12Z", "category": "GPT広告・AI広告・広告運用・生成AI活用", "importance": "A", "summary": "2026年6月29日に日本でローンチされたChatGPT広告について、キャンペーン作成から翌日のレポート表示までの実際の作業フローを紹介する動画。広告運用の効率化とAIツール活用の実例を示している。サムネイルとナレーション制作にもAIが活用されており、生成AI活用の具体例となっている。", "points": ["ChatGPT広告が日本市場でローンチされ、新しい広告運用プラットフォームとして利用可能になった", "キャンペーン作成から報告書生成までの一連の作業フローが1日で完結する迅速な運用が可能", "動画制作（サムネイル・ナレーション）にAIを活用することで、マーケティング業務全体の効率化を実現"], "metrics": {"views": 112}, "id": "bc96c0b6bbe09f54"}, {"source": "youtube", "title": "ChatGPT広告開始とX MCP設定方法、Claude Fabel復活について", "url": "https://www.youtube.com/watch?v=ljHmZxnnnh4", "text": "ChatGPT広告が開始されたのでどんな感じかを見てみます。またXのMCPが便利だったので設定方法を解説。そしてClaude Fabelが復活するらしいのでその内容をまとめ、注意点を話します。\n\n★プロセボ｜AIコミュニティ\nAI活用を実際に操作しながら学ぶワークショップ型AIスクール。\n参加申し込みはこちら → https://procevo.biz/\n\n★Substack（メルマガ）は下記から購読\nhttps://kt-life.net/sns-links/newsletter.html\n\n▼KEITOの著書\nChatGPT むちゃぶり仕事術\n→ https://amzn.to/46u5zjd\nやりたい！ができる生成AIでアプリづくり\n→ https://amzn.to/46sdQT4\n\nX Developer Console\nhttps://console.x.com/\n\n▼目次\nイントロ 00:00\nChatGPTの広告機能について 00:23\nX（旧Twitter）のMCP接続について 07:56\nセットアップ方法の全体的な流れ 08:31\nClaude Fableの復活について 23:54\nClaude Fable復活期間中にやるべきこと 28:24\n\nチャンネルのメンバーになって特典にアクセス\nhttps://www.youtube.com/channel/UCfapRkagDtoQEkGeyD3uERQ/join\n\n▼おすすめ動画\nClaude Designという神機能を徹底解説\nhttps://youtu.be/l3pwdLb-qJc\nClaude Codeおすすめスキル\nhttps://youtu.be/lGFX5eJ7TTw\nClaude Codeインストール後準備したい事\nhttps://youtu.be/JXmk7hmbS3c\nClaude Code AI活用術まとめ\nhttps://youtu.be/UMnA5dFlSDQ\nClaude Coworkスキル徹底解説\nhttps://youtu.be/ia8oqQB6laM\n\n完全無料｜日本最大級の生成AIコミュニティ\n情報共有・無料講義・交流など。生成AIを学びたい、生成AIをビジネスにしたい、生成AIで仲間を見つけたい方は是非ご参加下さい。\n参加申し込みはこちら → https://sozo-collabo.hp.peraichi.com/\n\n\\\\　自己紹介　//\nAI × WEB YouTuber 兼 制作ディレクター。\nこのチャンネルではChatGPTや画像生成AIなどの生成系AIツールの活用方法や、新しいAI系ツールを紹介。その他ITに関する便利ツールや情報も発信しています。役に立った！面白かった！と思って頂けたら是非チャンネル登録お願い致します。\n\nAIを使ったサービス・仕組みのプロデュース。生成AIを活用した業務改善コンサルタント、講義やセミナーなどの登壇、AIやIT関連に関するアドバイザー（AI顧問）を請け負っております。\n\n▼お問合せ\n仕事の依頼はXのDMもしくは以下メールへ。\nkeito@realaize.jp\n\n各種SNSのフォローもお願いします！\nX：https://twitter.com/keitowebai\nLINE：https://lin.ee/1krnxOu\nnote：https://blog.procevo.biz/\nInstagram：https://instagram.com/keitowebai/\nTikTok：https://tiktok.com/@keito_cc\n\n#keito \n#ai \n#claude", "author": "KEITO【AI&WEB ch】", "published_at": "2026-07-01T10:00:24Z", "category": "生成AI活用・AI広告", "importance": "A", "summary": "ChatGPTの新しい広告機能がリリースされた内容を解説。X（旧Twitter）のMCP機能の設定方法を詳細に説明し、Claude Fabelの復活に関する情報と注意点をまとめた動画。生成AIツールの最新アップデート情報を網羅的に紹介している。", "points": ["ChatGPT広告機能が開始され、その具体的な仕様と運用方法について解説されている", "X MCPの設定方法が詳細に説明されており、AI活用の実装面での参考になる", "Claude Fabelの復活期間中に実施すべき施策が提示されている"], "metrics": {"views": 7444}, "id": "0911eda174bc34c1"}, {"source": "youtube", "title": "Podcast Ep.1: AIマーケラジオ始めます！/ChatGPT広告が日本で開始", "url": "https://www.youtube.com/watch?v=uBkhsx88PBc", "text": "『マーケティング×AIを、ゆるく深く。』\n\nデジタルマーケティングを専門にするSpeeeの\nセールス＆マーケ責任者として事業のことを日々考える藤井（ふじい）と、\nAI研究開発組織のリーダーでAIに詳しい堀江（ほりえ）が、\n気になる最新ニュースに触れながら、AI×マーケの面白さを掘り下げていきます。\n\n肩ひじ張らずに、AI検索（AIO）やAI広告などの最新情報を楽しく学べるポッドキャストを目指して運営してまいります。\n\n--------\n▼今日のトピック\n\n・AIマーケラジオ、始めます！\n・われわれが何者か\n・ChatGPT広告が日本でスタート\n・各社の主要AIプロダクトのマネタイズ状況（OpenAI、Google、Anthropic…）\n・AIでの購買ってどれくらい進んでる？\n・SEOとAI検索の違い\n\n--------\n\n※【訂正】エピソード内でシェイクスピアと猫の話をしていますが、正確には猫ではなく猿でした。🐒\n\n※番組内で言及している市場規模や予測数値は、収録時点での公開レポート等に基づく推測値を含みます。\n\n※音声が一部聞きづらい箇所がありすみません。今後改善をしていきます。\nエピソードの感想や、聞いてみたいテーマなど、ぜひコメントいただけると嬉しいです！\n\n--------\n\nフォロー・コメント・評価をいただけると励みになります！\n\n--------\n\n▼YouTube\nhttps://www.youtube.com/@Marketing.Insights\n\n▼X\nhttps://x.com/Speee_AEO\n\n▼Spotify（Podcast）\nhttps://open.spotify.com/show/033He8CVEm3C4CUOngcoka", "author": "Speee AI Marketing Insights / SEO・AEOのプロフェッショナル", "published_at": "2026-07-02T05:50:28Z", "category": "AI広告・生成AI活用・マーケティング", "importance": "A", "summary": "SpeeeのマーケティングとAI研究開発の専門家によるポッドキャスト第1回。ChatGPT広告の日本開始、OpenAI・Google・Anthropicなどの主要AIプロダクトのマネタイズ状況、AI検索とSEOの違いなど、AI×マーケティングの最新トレンドを解説。デジタルマーケティングの実務視点からAI活用の現状と展望を扱う。", "points": ["ChatGPT広告が日本でスタート開始し、各社のAIプロダクトのマネタイズが進行中", "AI検索（AIO）とSEOの違いを理解することがマーケターの重要課題", "AI購買の進展状況と市場規模予測から、AI×マーケティングの実装機会を把握できる"], "metrics": {"views": 76}, "id": "36f663dde5facb4e"}, {"source": "youtube", "title": "【ChatGPT広告の出し方】初心者向けに初期の配信設定・入稿手順を徹底解説！（後編）", "url": "https://www.youtube.com/watch?v=RTymf03jDVg", "text": "みなさん、こんにちは。火燵の動画マーケティングスクールです。\n\n今回の動画は「ChatGPT広告講座」の後編です！\n前編（概要・準備編）に引き続き、今回は具体的な「ChatGPT広告の出し方」と「初期の設定手順」について、実際の画面をお見せしながらわかりやすく解説します。\n\nChatGPT広告を初めて配信する方が迷いがちな、アカウントの構造（キャンペーン、広告グループ、広告クリエイティブ）や、予算・入札単価（CPC）の設定、広告見出し・説明文・画像の入稿方法まで、手順に沿って1ステップずつ実演します。\n\n動画を真似して設定するだけで、誰でも簡単に効果的なChatGPT広告を配信できるようになります。自社でのWeb広告運用や動画マーケティング、内製化にぜひお役立てください！\n\n▼前編（概要・準備編）はこちらからご覧ください！\n（※前編動画のURLをここに挿入してください）\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n◆ 目次（タイムスタンプ）\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n0:00 オープニング（ChatGPT広告の配信設定）\n0:25 広告設定の基本構造（キャンペーン・広告グループ・広告の4階層）\n1:30 キャンペーンの設定（目的の選び方・対象地域・1日の予算）\n3:00 広告グループの設定（CPC上限入札額・URL・コンテキストのヒント）\n4:40 広告の設定（ロゴ・見出し・説明文・画像の登録・プレビュー）\n6:30 キャンペーンの最終確認と公開\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n◆ 火燵（こたつ）の動画マーケティングスクールについて\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n火燵では、企業の「動画内製化（インハウスビデオ）」を支援する様々な講義やサポートを提供しています。\n\n▼株式会社火燵のWEBサイト\nhttps://kotatsu.info/\n\n▼火燵の動画マーケティングスクール\nhttps://vod.kotatsu.info/\n\n#動画マーケティングスクール #動画内製化 #動画編集スクール #動画制作講座\n#生成AI検索対策 #LLMO #AIO #ChatGPT広告 #広告運用 #デジタルマーケティング", "author": "株式会社火燵 【LLMO・動画マーケティング】", "published_at": "2026-07-01T13:59:58Z", "category": "GPT広告・広告運用", "importance": "A", "summary": "ChatGPT広告の初期配信設定と具体的な入稿手順を初心者向けに解説した動画。アカウント構造（キャンペーン・広告グループ・広告クリエイティブ）、予算・入札単価（CPC）の設定、広告見出し・説明文・画像の入稿方法を実画面で実演。動画を参考に手順に沿って設定することで、誰でも効果的なChatGPT広告を配信できるようになる内容。", "points": ["ChatGPT広告の4階層構造（キャンペーン・広告グループ・広告）の理解と設定方法", "CPC上限入札額、1日の予算、対象地域などの基本的な配信設定のポイント", "広告見出し・説明文・画像・ロゴの入稿方法と最終確認プロセス"], "metrics": {"views": 9}, "id": "41fe9f685f663c75"}, {"source": "youtube", "title": "Helping brands stand out through cinematic AI advertising", "url": "https://www.youtube.com/watch?v=5SYAPNn3iu4", "text": "", "author": "AI marketing creator | UI UX Designer ", "published_at": "2026-07-03T06:29:15Z", "category": "生成AI活用・AI広告", "importance": "B", "summary": "シネマティックなAI広告を活用してブランドを差別化する方法について解説しています。AI技術を用いた高品質な映像制作により、ラグジュアリーブランドのクリエイティブキャンペーンを実現します。視覚的なインパクトを重視した広告戦略の構築が可能になります。", "points": ["生成AIを活用したシネマティック映像制作でブランド差別化を実現", "ラグジュアリー業界向けのAI広告クリエイティブ活用事例", "高品質ビジュアルコンテンツによる広告キャンペーンの効果向上"], "metrics": {"views": 0}, "id": "fa54e339e2fe4d4e"}]};
+    const state = { query: "", source: "", importance: "" };
+    const labels = { x: "X", youtube: "YouTube", blog: "ブログ", newsletter: "ニュースレター" };
+    const generated = document.getElementById("generated");
+    const query = document.getElementById("query");
+    const source = document.getElementById("source");
+    const importance = document.getElementById("importance");
+    const itemsEl = document.getElementById("items");
+    const statsEl = document.getElementById("stats");
+    generated.textContent = `更新: ${new Date(DATA.generatedAt).toLocaleString("ja-JP")}`;
+
+    [...new Set(DATA.items.map((item) => item.source))].forEach((name) => {
+      const option = document.createElement("option");
+      option.value = name;
+      option.textContent = labels[name] || name;
+      source.appendChild(option);
+    });
+
+    function matches(item) {
+      const haystack = `${item.title} ${item.summary} ${item.text} ${item.category}`.toLowerCase();
+      return (!state.query || haystack.includes(state.query.toLowerCase()))
+        && (!state.source || item.source === state.source)
+        && (!state.importance || item.importance === state.importance);
+    }
+
+    function renderStats(items) {
+      const counts = {
+        total: items.length,
+        x: items.filter((item) => item.source === "x").length,
+        youtube: items.filter((item) => item.source === "youtube").length,
+        high: items.filter((item) => ["S", "A"].includes(item.importance)).length,
+      };
+      statsEl.innerHTML = `
+        <div class="stat"><strong>${counts.total}</strong><span>表示中の記事</span></div>
+        <div class="stat"><strong>${counts.x}</strong><span>X</span></div>
+        <div class="stat"><strong>${counts.youtube}</strong><span>YouTube</span></div>
+        <div class="stat"><strong>${counts.high}</strong><span>重要度A以上</span></div>
+      `;
+    }
+
+    function render() {
+      const filtered = DATA.items.filter(matches);
+      renderStats(filtered);
+      if (!filtered.length) {
+        itemsEl.innerHTML = `<div class="empty">条件に合う記事がありません。</div>`;
+        return;
+      }
+      itemsEl.innerHTML = filtered.map((item) => `
+        <article>
+          <div class="meta">
+            <span class="badge">${labels[item.source] || item.source}</span>
+            <span class="badge importance-${item.importance}">重要度 ${item.importance || "C"}</span>
+            <span class="badge">${item.category || "未分類"}</span>
+          </div>
+          <h2>${escapeHtml(item.title)}</h2>
+          <p>${escapeHtml(item.summary || item.text || "")}</p>
+          <ul>${(item.points || []).slice(0, 3).map((point) => `<li>${escapeHtml(point)}</li>`).join("")}</ul>
+          <a class="source-link" href="${escapeAttr(item.url)}" target="_blank" rel="noopener">元URLを開く</a>
+        </article>
+      `).join("");
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+      }[char]));
+    }
+    function escapeAttr(value) {
+      return escapeHtml(value || "#");
+    }
+    query.addEventListener("input", (event) => { state.query = event.target.value; render(); });
+    source.addEventListener("change", (event) => { state.source = event.target.value; render(); });
+    importance.addEventListener("change", (event) => { state.importance = event.target.value; render(); });
+    render();
+  </script>
+</body>
+</html>

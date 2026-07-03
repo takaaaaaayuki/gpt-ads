@@ -1,0 +1,70 @@
+{
+  "x": {
+    "enabled": true,
+    "login_required": false,
+    "max_keywords_per_run": 3,
+    "max_posts_per_keyword": 8,
+    "wait_ms": 7000,
+    "search_keywords": [
+      "GPT広告",
+      "ChatGPT広告",
+      "AI広告",
+      "generative AI advertising",
+      "ChatGPT ads",
+      "AI search ads",
+      "LLM広告"
+    ],
+    "accounts": [
+      "OpenAI",
+      "GoogleAds",
+      "AnthropicAI",
+      "MicrosoftAdvertising",
+      "Adobe",
+      "MarketingAI"
+    ]
+  },
+  "youtube": {
+    "enabled": true,
+    "search_keywords": [
+      "GPT広告",
+      "ChatGPT広告",
+      "generative AI advertising",
+      "AI advertising",
+      "ChatGPT ads"
+    ],
+    "max_results_per_keyword": 3
+  },
+  "rss": {
+    "enabled": true,
+    "feeds": [
+      {
+        "name": "OpenAI News",
+        "url": "https://openai.com/news/rss.xml"
+      },
+      {
+        "name": "Google AI Blog",
+        "url": "https://blog.google/technology/ai/rss/"
+      },
+      {
+        "name": "Google Ads & Commerce",
+        "url": "https://blog.google/products/ads-commerce/rss/"
+      },
+      {
+        "name": "Marketing AI Institute",
+        "url": "https://www.marketingaiinstitute.com/blog/rss.xml"
+      },
+      {
+        "name": "Adweek AI",
+        "url": "https://www.adweek.com/category/artificial-intelligence/feed/"
+      },
+      {
+        "name": "Search Engine Land",
+        "url": "https://searchengineland.com/feed"
+      },
+      {
+        "name": "Search Engine Journal",
+        "url": "https://www.searchenginejournal.com/feed/"
+      }
+    ]
+  }
+}

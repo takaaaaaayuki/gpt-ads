@@ -1,0 +1,13 @@
+.env
+.venv/
+.ms-playwright/
+__pycache__/
+.pycache_tmp/
+*.pyc
+.DS_Store
+logs/*.log
+data/raw/*.jsonl
+data/processed/*.jsonl
+data/processed/*.json
+reports/*.md
+public/data/*.json
