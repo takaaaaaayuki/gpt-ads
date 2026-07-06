@@ -31,6 +31,7 @@ jobs:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
           SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
+          GPT_ADS_MAX_ITEMS_PER_RUN: "16"
           GPT_ADS_USE_SAMPLE_DATA: "0"
         run: python -m project.main
 
