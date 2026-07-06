@@ -99,7 +99,7 @@
   },
   "google_news": {
     "enabled": true,
-    "max_items_per_query": 10,
+    "max_items_per_query": 20,
     "queries": [
       "ChatGPT広告",
       "GPT広告",

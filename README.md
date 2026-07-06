@@ -253,16 +253,17 @@ Then in GitHub:
 
 1. Open the repository settings.
 2. Open `Pages`.
-3. Set the source to `GitHub Actions`.
-4. Add repository secrets:
+3. Set the source to `Deploy from a branch`.
+4. Choose `main` and `/docs`.
+5. Add repository secrets:
 
 ```text
 ANTHROPIC_API_KEY
 YOUTUBE_API_KEY
 ```
 
-5. Run the `GPT Ads` workflow manually once.
-6. Share the GitHub Pages URL with employees.
+6. Run the `GPT Ads` workflow manually once.
+7. Share the GitHub Pages URL with employees.
 
 If company policy requires private access, use a private repository with GitHub Enterprise/organization Pages rules, or deploy the `public/` folder to an internal hosting service instead.
 
@@ -279,9 +280,10 @@ Current collection policy:
 ```text
 Collect broadly from YouTube, fixed RSS, and Japanese Google News RSS.
 Filter aggressively for GPT ads / ChatGPT ads / AI ads relevance.
-Summarize the top 24 items with Claude.
+Summarize the newest and most relevant 24 items with Claude.
 Show the summarized items in the portal with source, importance, and publication date.
 Ignore items older than 120 days by default.
+Run automatically every 6 hours to stay within the YouTube API free quota.
 ```
 
 ## Claude Skill Role
@@ -314,3 +316,4 @@ ChatGPT 広告 日本
 ```
 
 This helps surface Japanese articles that appear in Google News even when they are not published by the fixed RSS sources.
+By default, the bot reads up to 20 Google News RSS items per query, then narrows them before Claude summarization.

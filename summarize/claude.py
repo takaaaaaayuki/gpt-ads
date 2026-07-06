@@ -328,7 +328,7 @@ def summarize_items(items: list[SourceItem], limit: int) -> list[SourceItem]:
 
 def _balanced_source_selection(items: list[SourceItem], limit: int) -> list[SourceItem]:
     grouped: dict[str, list[SourceItem]] = {}
-    for item in items:
+    for item in sorted(items, key=_item_timestamp, reverse=True):
         grouped.setdefault(item.source, []).append(item)
     source_order = [source for source in ["x", "youtube", "blog", "newsletter"] if source in grouped]
     source_order.extend(source for source in grouped if source not in source_order)
@@ -348,3 +348,15 @@ def _balanced_source_selection(items: list[SourceItem], limit: int) -> list[Sour
             break
         index += 1
     return selected
+
+
+def _item_timestamp(item: SourceItem) -> float:
+    if not item.published_at:
+        return 0
+    try:
+        published = datetime.fromisoformat(item.published_at.replace("Z", "+00:00"))
+        if published.tzinfo is None:
+            published = published.replace(tzinfo=timezone.utc)
+        return published.timestamp()
+    except ValueError:
+        return 0
