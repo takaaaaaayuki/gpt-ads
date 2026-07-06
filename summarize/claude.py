@@ -5,6 +5,7 @@ import logging
 import os
 import re
 import urllib.request
+from datetime import datetime, timedelta, timezone
 from urllib.error import HTTPError
 
 from project.models import SourceItem
@@ -123,6 +124,8 @@ NEGATIVE_TERMS = [
 
 
 def is_relevant(item: SourceItem) -> bool:
+    if _is_too_old(item):
+        return False
     if item.source == "blog":
         text = f"{item.title}\n{item.text[:500]}\n{item.author}\n{item.category}".lower()
     else:
@@ -160,6 +163,19 @@ def is_relevant(item: SourceItem) -> bool:
     if is_negative:
         return False
     return has_ai and has_strong_ad_context and from_marketing_source
+
+
+def _is_too_old(item: SourceItem) -> bool:
+    max_age_days = int(os.getenv("GPT_ADS_MAX_ITEM_AGE_DAYS", "120"))
+    if not item.published_at:
+        return False
+    try:
+        published = datetime.fromisoformat(item.published_at.replace("Z", "+00:00"))
+        if published.tzinfo is None:
+            published = published.replace(tzinfo=timezone.utc)
+    except ValueError:
+        return False
+    return published < datetime.now(timezone.utc) - timedelta(days=max_age_days)
 
 
 def _contains_term(text: str, term: str) -> bool:

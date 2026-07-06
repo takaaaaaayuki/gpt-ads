@@ -43,7 +43,7 @@ class RuntimeOptions:
 
 def runtime_options(use_sample_data: bool = False) -> RuntimeOptions:
     return RuntimeOptions(
-        max_items_per_run=int(os.getenv("GPT_ADS_MAX_ITEMS_PER_RUN", "20")),
+        max_items_per_run=int(os.getenv("GPT_ADS_MAX_ITEMS_PER_RUN", "24")),
         min_importance=os.getenv("GPT_ADS_MIN_IMPORTANCE", "B").upper(),
         use_sample_data=use_sample_data or os.getenv("GPT_ADS_USE_SAMPLE_DATA", "0") == "1",
     )

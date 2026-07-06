@@ -273,6 +273,16 @@ If company policy requires private access, use a private repository with GitHub 
 - Limit Claude calls with `GPT_ADS_MAX_ITEMS_PER_RUN`.
 - Keep Slack optional.
 
+Current collection policy:
+
+```text
+Collect broadly from YouTube, fixed RSS, and Japanese Google News RSS.
+Filter aggressively for GPT ads / ChatGPT ads / AI ads relevance.
+Summarize the top 24 items with Claude.
+Show the summarized items in the portal with source, importance, and publication date.
+Ignore items older than 120 days by default.
+```
+
 ## Claude Skill Role
 
 The web portal is the shared place employees can open.

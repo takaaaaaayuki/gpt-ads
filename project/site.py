@@ -108,7 +108,7 @@ HTML_TEMPLATE = """<!doctype html>
     main { padding: 22px 24px 52px; }
     .toolbar {
       display: grid;
-      grid-template-columns: minmax(260px, 1fr) minmax(150px, 210px) minmax(150px, 210px);
+      grid-template-columns: minmax(260px, 1fr) minmax(135px, 180px) minmax(135px, 180px) minmax(120px, 160px);
       gap: 12px;
       margin: -46px 0 18px;
       align-items: center;
@@ -208,6 +208,17 @@ HTML_TEMPLATE = """<!doctype html>
       gap: 10px;
       flex-wrap: wrap;
     }
+    .date-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--gpt-ink);
+      background: var(--surface-soft);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-weight: 700;
+    }
     p { margin: 0; color: #33483f; line-height: 1.72; }
     ul { margin: 0; padding-left: 20px; color: #33483f; line-height: 1.6; }
     li + li { margin-top: 5px; }
@@ -266,18 +277,23 @@ HTML_TEMPLATE = """<!doctype html>
         <option value="B">重要度 B</option>
         <option value="C">重要度 C</option>
       </select>
+      <select id="sort">
+        <option value="date">新しい順</option>
+        <option value="importance">重要度順</option>
+      </select>
     </section>
     <section class="stats" id="stats"></section>
     <section class="grid" id="items"></section>
   </main>
   <script>
     const DATA = __GPT_ADS_DATA__;
-    const state = { query: "", source: "", importance: "" };
+    const state = { query: "", source: "", importance: "", sort: "date" };
     const labels = { youtube: "YouTube", blog: "Web記事", newsletter: "ニュースレター" };
     const generated = document.getElementById("generated");
     const query = document.getElementById("query");
     const source = document.getElementById("source");
     const importance = document.getElementById("importance");
+    const sort = document.getElementById("sort");
     const itemsEl = document.getElementById("items");
     const statsEl = document.getElementById("stats");
     generated.textContent = `更新: ${new Date(DATA.generatedAt).toLocaleString("ja-JP")}`;
@@ -312,7 +328,7 @@ HTML_TEMPLATE = """<!doctype html>
     }
 
     function render() {
-      const filtered = DATA.items.filter(matches);
+      const filtered = DATA.items.filter(matches).sort(compareItems);
       renderStats(filtered);
       if (!filtered.length) {
         itemsEl.innerHTML = `<div class="empty">条件に合う記事がありません。</div>`;
@@ -328,7 +344,7 @@ HTML_TEMPLATE = """<!doctype html>
           <h2>${escapeHtml(item.title)}</h2>
           <div class="byline">
             <span>${escapeHtml(item.author || labels[item.source] || "")}</span>
-            <span>${formatDate(item.published_at)}</span>
+            <span class="date-pill">${formatDate(item.published_at)}</span>
           </div>
           <p>${escapeHtml(item.summary || item.text || "")}</p>
           <ul>${(item.points || []).slice(0, 3).map((point) => `<li>${escapeHtml(point)}</li>`).join("")}</ul>
@@ -351,9 +367,22 @@ HTML_TEMPLATE = """<!doctype html>
       if (Number.isNaN(date.getTime())) return escapeHtml(value);
       return date.toLocaleDateString("ja-JP", { year: "numeric", month: "short", day: "numeric" });
     }
+    function itemTime(item) {
+      const date = new Date(item.published_at || 0);
+      return Number.isNaN(date.getTime()) ? 0 : date.getTime();
+    }
+    function compareItems(a, b) {
+      if (state.sort === "date") {
+        const dateDelta = itemTime(b) - itemTime(a);
+        if (dateDelta !== 0) return dateDelta;
+      }
+      const rank = { S: 0, A: 1, B: 2, C: 3 };
+      return (rank[a.importance] ?? 9) - (rank[b.importance] ?? 9);
+    }
     query.addEventListener("input", (event) => { state.query = event.target.value; render(); });
     source.addEventListener("change", (event) => { state.source = event.target.value; render(); });
     importance.addEventListener("change", (event) => { state.importance = event.target.value; render(); });
+    sort.addEventListener("change", (event) => { state.sort = event.target.value; render(); });
     render();
   </script>
 </body>
