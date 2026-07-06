@@ -5,7 +5,7 @@ import logging
 from datetime import datetime
 
 from collect.dedupe import dedupe_items
-from collect.rss import collect_rss
+from collect.rss import collect_google_news, collect_rss
 from collect.sample import sample_items
 from collect.x import collect_x
 from collect.youtube import collect_youtube
@@ -44,6 +44,7 @@ def run(send_slack: bool = False, demo: bool = False, skip_x: bool = False, x_on
     if not x_only:
         collected.extend(collect_youtube(sources.get("youtube", {})))
         collected.extend(collect_rss(sources.get("rss", {})))
+        collected.extend(collect_google_news(sources.get("google_news", {})))
 
     if options.use_sample_data:
         LOGGER.info("Demo mode is enabled. Sample data is added for preview.")

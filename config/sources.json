@@ -1,6 +1,6 @@
 {
   "x": {
-    "enabled": true,
+    "enabled": false,
     "login_required": false,
     "max_keywords_per_run": 3,
     "max_posts_per_keyword": 8,
@@ -54,6 +54,36 @@
         "url": "https://www.marketingaiinstitute.com/blog/rss.xml"
       },
       {
+        "name": "MarkeZine",
+        "url": "https://markezine.jp/rss/new/20/index.xml",
+        "max_items": 30
+      },
+      {
+        "name": "Web担当者Forum",
+        "url": "https://webtan.impress.co.jp/rss.xml",
+        "max_items": 30
+      },
+      {
+        "name": "AINOW",
+        "url": "https://ainow.ai/feed/",
+        "max_items": 30
+      },
+      {
+        "name": "AdverTimes",
+        "url": "https://www.advertimes.com/feed/",
+        "max_items": 30
+      },
+      {
+        "name": "ITmedia AI+",
+        "url": "https://rss.itmedia.co.jp/rss/2.0/aiplus.xml",
+        "max_items": 30
+      },
+      {
+        "name": "ITmedia Marketing",
+        "url": "https://rss.itmedia.co.jp/rss/2.0/marketing.xml",
+        "max_items": 30
+      },
+      {
         "name": "Adweek AI",
         "url": "https://www.adweek.com/category/artificial-intelligence/feed/"
       },
@@ -65,6 +95,20 @@
         "name": "Search Engine Journal",
         "url": "https://www.searchenginejournal.com/feed/"
       }
+    ]
+  },
+  "google_news": {
+    "enabled": true,
+    "max_items_per_query": 10,
+    "queries": [
+      "ChatGPT広告",
+      "GPT広告",
+      "AI広告 生成AI",
+      "AI検索 広告",
+      "LLMO GEO 広告",
+      "AIマーケティング 広告",
+      "生成AIマーケティング 広告",
+      "ChatGPT 広告 日本"
     ]
   }
 }

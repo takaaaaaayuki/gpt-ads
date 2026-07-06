@@ -51,6 +51,13 @@ GPT_ADS_TERMS = [
     "ai search ads",
     "ai検索広告",
     "会話型広告",
+    "aiエージェント広告",
+    "生成aiマーケティング",
+    "aiマーケティング",
+    "ai検索",
+    "aio",
+    "llmo",
+    "geo",
 ]
 MARKETING_TERMS = [
     "ads",
@@ -107,16 +114,47 @@ NEGATIVE_TERMS = [
     "biology",
     "infrastructure",
     "core dump",
+    "受付終了",
+    "プレゼント",
+    "書籍プレゼント",
+    "gemini最新活用ガイド",
+    "アクセシビリティ",
 ]
 
 
 def is_relevant(item: SourceItem) -> bool:
-    text = f"{item.title}\n{item.text}\n{item.author}\n{item.category}".lower()
+    if item.source == "blog":
+        text = f"{item.title}\n{item.text[:500]}\n{item.author}\n{item.category}".lower()
+    else:
+        text = f"{item.title}\n{item.text}\n{item.author}\n{item.category}".lower()
     from_marketing_source = "marketing" in item.author.lower() or "ad" in item.author.lower()
     has_gpt_ads = any(_contains_term(text, term) for term in GPT_ADS_TERMS)
     has_ai = any(_contains_term(text, term) for term in AI_TERMS)
     has_strong_ad_context = any(_contains_term(text, term) for term in STRONG_AD_TERMS)
     is_negative = any(_contains_term(text, term) for term in NEGATIVE_TERMS)
+    if item.source == "blog":
+        title = item.title.lower()
+        title_has_core_theme = any(
+            _contains_term(title, term)
+            for term in [
+                "gpt広告",
+                "chatgpt広告",
+                "chatgpt ads",
+                "ai広告",
+                "ai ads",
+                "ai advertising",
+                "ai検索",
+                "aio",
+                "geo",
+                "llmo",
+                "aiマーケティング",
+                "生成aiマーケティング",
+                "ブランド",
+                "集客",
+                "広告",
+            ]
+        )
+        return has_gpt_ads and title_has_core_theme and not is_negative
     if has_gpt_ads:
         return True
     if is_negative:

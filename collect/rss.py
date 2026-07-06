@@ -3,6 +3,7 @@ from __future__ import annotations
 import html
 import logging
 import re
+import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
 from email.utils import parsedate_to_datetime
@@ -58,7 +59,7 @@ def collect_rss(config: dict[str, Any]) -> list[SourceItem]:
                 xml_bytes = response.read()
             root = ET.fromstring(xml_bytes)
             entries = root.findall(".//item") or root.findall(".//{http://www.w3.org/2005/Atom}entry")
-            for entry in entries[:10]:
+            for entry in entries[: int(feed.get("max_items", 20))]:
                 title = _text(_child_text(entry, ["title"]))
                 link = _child_text(entry, ["link"])
                 if not link:
@@ -89,3 +90,25 @@ def collect_rss(config: dict[str, Any]) -> list[SourceItem]:
                 str(exc).splitlines()[0],
             )
     return items
+
+
+def collect_google_news(config: dict[str, Any]) -> list[SourceItem]:
+    if not config.get("enabled", True):
+        return []
+    feed_config = {
+        "enabled": True,
+        "feeds": [
+            {
+                "name": f"Google News: {query}",
+                "url": _google_news_url(query),
+                "max_items": int(config.get("max_items_per_query", 10)),
+            }
+            for query in config.get("queries", [])
+        ],
+    }
+    return collect_rss(feed_config)
+
+
+def _google_news_url(query: str) -> str:
+    encoded = urllib.parse.quote(query)
+    return f"https://news.google.com/rss/search?q={encoded}&hl=ja&gl=JP&ceid=JP:ja"

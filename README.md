@@ -286,3 +286,20 @@ Claude API = automatic summarization
 Claude Skill = reusable employee workflow on top of the portal
 Slack = optional notification channel
 ```
+
+## Japanese Web Collection
+
+The portal does not rely only on fixed blogs. It also uses Google News RSS search queries for Japanese GPT ads topics:
+
+```text
+ChatGPT広告
+GPT広告
+AI広告 生成AI
+AI検索 広告
+LLMO GEO 広告
+AIマーケティング 広告
+生成AIマーケティング 広告
+ChatGPT 広告 日本
+```
+
+This helps surface Japanese articles that appear in Google News even when they are not published by the fixed RSS sources.
