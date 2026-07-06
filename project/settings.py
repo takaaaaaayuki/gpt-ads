@@ -13,6 +13,7 @@ RAW_DIR = ROOT / "data" / "raw"
 PROCESSED_DIR = ROOT / "data" / "processed"
 REPORTS_DIR = ROOT / "reports"
 PUBLIC_DIR = ROOT / "public"
+DOCS_DIR = ROOT / "docs"
 LOG_DIR = ROOT / "logs"
 
 
@@ -50,5 +51,5 @@ def runtime_options(use_sample_data: bool = False) -> RuntimeOptions:
 
 
 def ensure_dirs() -> None:
-    for directory in [RAW_DIR, PROCESSED_DIR, REPORTS_DIR, PUBLIC_DIR, LOG_DIR, PUBLIC_DIR / "data"]:
+    for directory in [RAW_DIR, PROCESSED_DIR, REPORTS_DIR, PUBLIC_DIR, DOCS_DIR, LOG_DIR, PUBLIC_DIR / "data"]:
         directory.mkdir(parents=True, exist_ok=True)

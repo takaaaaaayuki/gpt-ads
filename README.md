@@ -21,10 +21,10 @@ logs/app.log
 The main output for employees is:
 
 ```text
-public/index.html
+docs/index.html
 ```
 
-Open it in a browser to see the GPT Ads Portal.
+GitHub Pages serves `docs/index.html`.
 
 ## Quick Start
 
@@ -36,6 +36,7 @@ Then open:
 
 ```text
 public/index.html
+docs/index.html
 ```
 
 The default command uses real sources only.

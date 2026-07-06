@@ -14,6 +14,7 @@ from project.logging_config import configure_logging
 from project.report import write_report
 from project.settings import (
     PROCESSED_DIR,
+    DOCS_DIR,
     PUBLIC_DIR,
     RAW_DIR,
     REPORTS_DIR,
@@ -73,6 +74,7 @@ def run(send_slack: bool = False, demo: bool = False, skip_x: bool = False, x_on
     report_path = REPORTS_DIR / f"{today}.md"
     write_report(report_path, summarized)
     build_site(PUBLIC_DIR, summarized)
+    build_site(DOCS_DIR, summarized)
 
     if send_slack:
         notify_slack(summarized)
