@@ -9,5 +9,6 @@ logs/*.log
 data/raw/*.jsonl
 data/processed/*.jsonl
 data/processed/*.json
+!data/processed/archive.jsonl
 reports/*.md
 public/data/*.json

@@ -8,10 +8,11 @@ from project.models import SourceItem
 from project.report import sort_items
 
 
-def build_site(public_dir: Path, items: list[SourceItem]) -> None:
+def build_site(public_dir: Path, items: list[SourceItem], new_items_count: int = 0) -> None:
     public_dir.mkdir(parents=True, exist_ok=True)
     payload = {
         "generatedAt": datetime.now().isoformat(timespec="seconds"),
+        "newItemsCount": new_items_count,
         "items": [item.to_dict() for item in sort_items(items)],
     }
     data_json = json.dumps(payload, ensure_ascii=False)
@@ -296,7 +297,7 @@ HTML_TEMPLATE = """<!doctype html>
     const sort = document.getElementById("sort");
     const itemsEl = document.getElementById("items");
     const statsEl = document.getElementById("stats");
-    generated.textContent = `更新: ${new Date(DATA.generatedAt).toLocaleString("ja-JP")}`;
+    generated.textContent = `更新: ${new Date(DATA.generatedAt).toLocaleString("ja-JP")} / 今回追加: ${DATA.newItemsCount || 0}件`;
 
     [...new Set(DATA.items.map((item) => item.source).filter((name) => name !== "x"))].forEach((name) => {
       const option = document.createElement("option");
@@ -320,7 +321,7 @@ HTML_TEMPLATE = """<!doctype html>
         high: items.filter((item) => ["S", "A"].includes(item.importance)).length,
       };
       statsEl.innerHTML = `
-        <div class="stat"><strong>${counts.total}</strong><span>表示中</span></div>
+        <div class="stat"><strong>${counts.total}</strong><span>アーカイブ</span></div>
         <div class="stat"><strong>${counts.youtube}</strong><span>YouTube</span></div>
         <div class="stat"><strong>${counts.blog}</strong><span>Web記事</span></div>
         <div class="stat"><strong>${counts.high}</strong><span>重要度A以上</span></div>

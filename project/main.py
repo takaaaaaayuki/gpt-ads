@@ -11,6 +11,7 @@ from collect.x import collect_x
 from collect.youtube import collect_youtube
 from project.io import read_jsonl, write_json, write_jsonl
 from project.logging_config import configure_logging
+from project.models import SourceItem
 from project.report import write_report
 from project.settings import (
     PROCESSED_DIR,
@@ -28,6 +29,7 @@ from slack.notifier import notify_slack
 from summarize.claude import summarize_items
 
 LOGGER = logging.getLogger(__name__)
+ARCHIVE_PATH = PROCESSED_DIR / "archive.jsonl"
 
 
 def run(send_slack: bool = False, demo: bool = False, skip_x: bool = False, x_only: bool = False) -> None:
@@ -52,29 +54,33 @@ def run(send_slack: bool = False, demo: bool = False, skip_x: bool = False, x_on
         collected = sample_items()
     elif not collected:
         LOGGER.warning("No live items collected. Check network access, API keys, or source settings.")
-        latest_path = PROCESSED_DIR / f"items_{today}.jsonl"
-        previous_items = read_jsonl(latest_path)
+        previous_items = load_archive()
         if previous_items:
             LOGGER.info("Using previous processed data to avoid overwriting the portal with an empty run.")
             report_path = REPORTS_DIR / f"{today}.md"
             write_report(report_path, previous_items)
             build_site(PUBLIC_DIR, previous_items)
+            build_site(DOCS_DIR, previous_items)
             return
 
     raw_path = RAW_DIR / f"items_{today}.jsonl"
     write_jsonl(raw_path, collected)
 
-    unique = dedupe_items(collected)
+    archive = load_archive()
+    archive_ids = {item.stable_id for item in archive}
+    unique = [item for item in dedupe_items(collected) if item.stable_id not in archive_ids]
     summarized = summarize_items(unique, options.max_items_per_run)
+    archive = merge_archive(archive, summarized)
 
     processed_path = PROCESSED_DIR / f"items_{today}.jsonl"
     write_jsonl(processed_path, summarized)
-    write_json(PROCESSED_DIR / "latest.json", [item.to_dict() for item in summarized])
+    write_jsonl(ARCHIVE_PATH, archive)
+    write_json(PROCESSED_DIR / "latest.json", [item.to_dict() for item in archive])
 
     report_path = REPORTS_DIR / f"{today}.md"
     write_report(report_path, summarized)
-    build_site(PUBLIC_DIR, summarized)
-    build_site(DOCS_DIR, summarized)
+    build_site(PUBLIC_DIR, archive, new_items_count=len(summarized))
+    build_site(DOCS_DIR, archive, new_items_count=len(summarized))
 
     if send_slack:
         notify_slack(summarized)
@@ -86,6 +92,21 @@ def run(send_slack: bool = False, demo: bool = False, skip_x: bool = False, x_on
         report_path,
         PUBLIC_DIR / "index.html",
     )
+
+
+def load_archive() -> list[SourceItem]:
+    archive = read_jsonl(ARCHIVE_PATH)
+    if archive:
+        return dedupe_items(archive)
+
+    restored = []
+    for path in sorted(PROCESSED_DIR.glob("items_*.jsonl")):
+        restored.extend(read_jsonl(path))
+    return dedupe_items(restored)
+
+
+def merge_archive(existing: list[SourceItem], new_items: list[SourceItem]) -> list[SourceItem]:
+    return dedupe_items(new_items + existing)
 
 
 def main() -> None:

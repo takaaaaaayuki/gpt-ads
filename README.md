@@ -280,8 +280,9 @@ Current collection policy:
 ```text
 Collect broadly from YouTube, fixed RSS, and Japanese Google News RSS.
 Filter aggressively for GPT ads / ChatGPT ads / AI ads relevance.
-Summarize the newest and most relevant 24 items with Claude.
-Show the summarized items in the portal with source, importance, and publication date.
+Summarize up to 24 new items with Claude on each run.
+Append summarized items to `data/processed/archive.jsonl`.
+Show the full archive in the portal with source, importance, and publication date.
 Ignore items older than 120 days by default.
 Run automatically every 6 hours to stay within the YouTube API free quota.
 ```
