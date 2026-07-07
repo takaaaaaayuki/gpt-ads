@@ -148,7 +148,7 @@ HTML_TEMPLATE = """<!doctype html>
     main { padding: 22px 24px 52px; }
     .toolbar {
       display: grid;
-      grid-template-columns: minmax(260px, 1fr) minmax(135px, 180px) minmax(135px, 180px) minmax(120px, 160px);
+      grid-template-columns: minmax(260px, 1fr) minmax(135px, 170px) minmax(135px, 170px) minmax(160px, 210px) minmax(120px, 150px);
       gap: 12px;
       margin: -46px 0 18px;
       align-items: center;
@@ -235,6 +235,24 @@ HTML_TEMPLATE = """<!doctype html>
     .importance-A { background: #eaf8f1; color: #067647; border-color: #bfe7d2; }
     .importance-B { background: #fff7ed; color: #b54708; border-color: #fed7aa; }
     .importance-C { background: #f2f4f7; color: #475467; border-color: #e4e7ec; }
+    .topic-tags {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .topic-tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--surface-soft);
+      color: #355247;
+      border: 1px solid var(--line);
+      font-size: 12px;
+      font-weight: 700;
+    }
     h2 {
       margin: 0;
       font-size: 19px;
@@ -320,6 +338,9 @@ HTML_TEMPLATE = """<!doctype html>
         <option value="B">重要度 B</option>
         <option value="C">重要度 C</option>
       </select>
+      <select id="topic">
+        <option value="">すべてのタグ</option>
+      </select>
       <select id="sort">
         <option value="date">新しい順</option>
         <option value="importance">重要度順</option>
@@ -330,12 +351,13 @@ HTML_TEMPLATE = """<!doctype html>
   </main>
   <script>
     const DATA = __GPT_ADS_DATA__;
-    const state = { query: "", source: "", importance: "", sort: "date" };
+    const state = { query: "", source: "", importance: "", topic: "", sort: "date" };
     const labels = { youtube: "YouTube", blog: "Web記事", newsletter: "ニュースレター" };
     const generated = document.getElementById("generated");
     const query = document.getElementById("query");
     const source = document.getElementById("source");
     const importance = document.getElementById("importance");
+    const topic = document.getElementById("topic");
     const sort = document.getElementById("sort");
     const itemsEl = document.getElementById("items");
     const statsEl = document.getElementById("stats");
@@ -347,12 +369,20 @@ HTML_TEMPLATE = """<!doctype html>
       option.textContent = labels[name] || name;
       source.appendChild(option);
     });
+    DATA.items.forEach((item) => { item.topics = topicTags(item); });
+    [...new Set(DATA.items.flatMap((item) => item.topics))].sort().forEach((name) => {
+      const option = document.createElement("option");
+      option.value = name;
+      option.textContent = name;
+      topic.appendChild(option);
+    });
 
     function matches(item) {
-      const haystack = `${item.title} ${item.summary} ${item.text} ${item.category}`.toLowerCase();
+      const haystack = `${item.title} ${item.summary} ${item.text} ${item.category} ${(item.topics || []).join(" ")}`.toLowerCase();
       return (!state.query || haystack.includes(state.query.toLowerCase()))
         && (!state.source || item.source === state.source)
-        && (!state.importance || item.importance === state.importance);
+        && (!state.importance || item.importance === state.importance)
+        && (!state.topic || (item.topics || []).includes(state.topic));
     }
 
     function renderStats(items) {
@@ -382,8 +412,8 @@ HTML_TEMPLATE = """<!doctype html>
           <div class="meta">
             <span class="badge source-${item.source}">${labels[item.source] || item.source}</span>
             <span class="badge importance-${item.importance}">重要度 ${item.importance || "C"}</span>
-            <span class="badge">${item.category || "未分類"}</span>
           </div>
+          <div class="topic-tags">${(item.topics || []).map((tag) => `<span class="topic-tag">${escapeHtml(tag)}</span>`).join("")}</div>
           <h2>${escapeHtml(item.title)}</h2>
           <div class="byline">
             <span>${escapeHtml(item.author || labels[item.source] || "")}</span>
@@ -403,6 +433,23 @@ HTML_TEMPLATE = """<!doctype html>
     }
     function escapeAttr(value) {
       return escapeHtml(value || "#");
+    }
+    function topicTags(item) {
+      const text = `${item.title} ${item.summary} ${item.text} ${item.category}`.toLowerCase();
+      const tags = [];
+      const add = (name) => { if (!tags.includes(name)) tags.push(name); };
+      if (includesAny(text, ["gpt広告", "chatgpt広告", "chatgpt ads", "gpt ads", "chatgpt ad", "gpt ad"])) add("GPT広告");
+      if (includesAny(text, ["ai広告", "ai ads", "ai advertising", "生成ai広告", "会話型広告", "aiエージェント広告"])) add("AI広告");
+      if (includesAny(text, ["ai検索", "ai search", "aio", "llmo", "geo", "seo", "検索"])) add("AI検索/LLMO");
+      if (includesAny(text, ["google ads", "meta ads", "広告運用", "campaign", "キャンペーン", "出稿", "運用", "獲得", "ファネル"])) add("広告運用");
+      if (includesAny(text, ["生成aiマーケティング", "aiマーケティング", "marketing", "マーケティング", "ブランド", "brand"])) add("生成AIマーケ");
+      if (includesAny(text, ["creative", "クリエイティブ", "画像生成", "動画生成", "広告素材", "バナー", "canva", "ugc"])) add("クリエイティブ");
+      if (includesAny(text, ["規制", "倫理", "privacy", "policy", "政治広告", "copyright", "著作権"])) add("規制/倫理");
+      if (!tags.length) add("その他");
+      return tags.slice(0, 4);
+    }
+    function includesAny(text, terms) {
+      return terms.some((term) => text.includes(term));
     }
     function formatDate(value) {
       if (!value) return "";
@@ -425,6 +472,7 @@ HTML_TEMPLATE = """<!doctype html>
     query.addEventListener("input", (event) => { state.query = event.target.value; render(); });
     source.addEventListener("change", (event) => { state.source = event.target.value; render(); });
     importance.addEventListener("change", (event) => { state.importance = event.target.value; render(); });
+    topic.addEventListener("change", (event) => { state.topic = event.target.value; render(); });
     sort.addEventListener("change", (event) => { state.sort = event.target.value; render(); });
     render();
   </script>
@@ -914,7 +962,7 @@ ABOUT_TEMPLATE = """<!doctype html>
       <div class="timeline">
         <article class="card"><h3>定期実行</h3><p>6時間ごとに自動実行。YouTube API無料枠とClaude APIコストを意識した頻度です。</p></article>
         <article class="card"><h3>情報収集</h3><p>RSS、GoogleニュースRSS、YouTubeから候補を集めます。Xは今回の対象外です。</p></article>
-        <article class="card"><h3>重複除去</h3><p>URLを基準に同じ情報を除外し、すでにアーカイブ済みの情報は再要約しません。</p></article>
+        <article class="card"><h3>重複除去とタグ付け</h3><p>URLを基準に重複を除外し、GPT広告、AI広告、AI検索/LLMOなどのタグで分類します。</p></article>
         <article class="card"><h3>Claude要約</h3><p>新着から最大24件を要約し、ポイント、カテゴリ、重要度を付与します。</p></article>
         <article class="card"><h3>公開</h3><p>要約済みデータをアーカイブへ追加し、GitHub Pagesで社内共有できるページを更新します。</p></article>
       </div>
@@ -937,6 +985,7 @@ ABOUT_TEMPLATE = """<!doctype html>
           <p class="section-copy">毎日見る場所としてだけでなく、提案前の論点整理、AI広告トレンドの棚卸し、週次共有の材料として使えます。</p>
           <ul class="check-list">
             <li>最新順で直近の変化を確認する</li>
+            <li>GPT広告、AI広告、AI検索/LLMOなどのタグで絞る</li>
             <li>重要度S/Aだけに絞って優先確認する</li>
             <li>キーワード検索で過去ナレッジを探す</li>
             <li>元URLから一次情報へ戻って詳細確認する</li>
