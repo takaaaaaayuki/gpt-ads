@@ -283,6 +283,7 @@ Filter aggressively for GPT ads / ChatGPT ads / AI ads relevance.
 Summarize up to 24 new items with Claude on each run.
 Append summarized items to `data/processed/archive.jsonl`.
 Show the full archive in the portal with source, importance, and publication date.
+Publish `about.html` as a one-page business overview of the portal, selection criteria, importance rules, and cost policy.
 Ignore items older than 120 days by default.
 Run automatically every 6 hours to stay within the YouTube API free quota.
 ```
