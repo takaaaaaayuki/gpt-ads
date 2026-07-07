@@ -649,14 +649,14 @@ ABOUT_TEMPLATE = """<!doctype html>
       font-weight: 800;
       white-space: nowrap;
     }
-    main { padding: 42px 0 64px; }
-    section + section { margin-top: 36px; }
+    main { padding: 58px 0 78px; }
+    section + section { margin-top: 68px; }
     .section-head {
       display: flex;
       justify-content: space-between;
-      gap: 16px;
+      gap: 22px;
       align-items: end;
-      margin-bottom: 16px;
+      margin-bottom: 26px;
       flex-wrap: wrap;
     }
     h2 {
@@ -665,15 +665,15 @@ ABOUT_TEMPLATE = """<!doctype html>
       line-height: 1.25;
     }
     .section-copy {
-      margin: 8px 0 0;
+      margin: 10px 0 0;
       color: var(--muted);
-      line-height: 1.75;
-      max-width: 760px;
+      line-height: 1.85;
+      max-width: 820px;
     }
     .stats {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
+      gap: 18px;
     }
     .stat, .card, .rule, .cost-box {
       background: var(--surface);
@@ -681,30 +681,31 @@ ABOUT_TEMPLATE = """<!doctype html>
       border-radius: 8px;
       box-shadow: 0 12px 28px rgba(16, 35, 29, 0.06);
     }
-    .stat { padding: 16px; }
+    .stat { padding: 20px; }
     .stat strong { display: block; font-size: 29px; line-height: 1; }
     .stat span { color: var(--muted); font-size: 13px; }
     .cards {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
+      gap: 20px;
     }
-    .card { padding: 18px; }
+    .card { padding: 24px; }
     .card h3, .rule h3, .cost-box h3 {
-      margin: 0 0 9px;
+      margin: 0 0 12px;
       font-size: 17px;
+      line-height: 1.45;
     }
     .card p, .rule p, .cost-box p {
       margin: 0;
       color: #33483f;
-      line-height: 1.72;
+      line-height: 1.86;
     }
     .rule-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
     }
-    .rule { padding: 16px; }
+    .rule { padding: 24px; }
     .rank {
       width: 34px;
       height: 34px;
@@ -720,17 +721,17 @@ ABOUT_TEMPLATE = """<!doctype html>
     .rank-c { background: #f2f4f7; color: #475467; }
     .timeline {
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+      gap: 18px;
     }
-    .timeline .card { min-height: 152px; }
+    .timeline .card { min-height: 172px; }
     .cost-layout {
       display: grid;
       grid-template-columns: 1.1fr 0.9fr;
-      gap: 14px;
+      gap: 20px;
       align-items: stretch;
     }
-    .cost-box { padding: 18px; }
+    .cost-box { padding: 26px; }
     .check-list {
       margin: 12px 0 0;
       padding: 0;
