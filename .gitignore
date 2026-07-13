@@ -5,6 +5,11 @@ __pycache__/
 .pycache_tmp/
 *.pyc
 .DS_Store
+.claude/
+backup/
+*.xlsx
+*.xls
+append_gpt_ads.py
 logs/*.log
 data/raw/*.jsonl
 data/processed/*.jsonl

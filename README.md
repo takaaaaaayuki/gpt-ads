@@ -60,6 +60,43 @@ Then open:
 http://localhost:8000
 ```
 
+## Import X Posts from Cowork Excel
+
+Cowork can collect X posts and save them to Excel. Import that workbook into the portal:
+
+```bash
+python -m project.import_x_excel path/to/cowork_x_posts.xlsx
+```
+
+Dry run without changing the portal:
+
+```bash
+python -m project.import_x_excel path/to/cowork_x_posts.xlsx --dry-run
+```
+
+Supported file types:
+
+```text
+.xlsx
+.csv
+.tsv
+```
+
+The importer accepts common Japanese and English column names such as:
+
+```text
+タイトル / title
+投稿者 / アカウント / author
+本文 / 投稿本文 / text
+URL / 投稿URL / 元URL
+投稿日 / 投稿日時 / date
+重要度 / importance
+カテゴリ / タグ / category
+いいね数 / リポスト数 / 返信数
+```
+
+Imported rows are saved as `source=x`, deduplicated by URL, appended to `data/processed/archive.jsonl`, and published to `public/index.html` and `docs/index.html`.
+
 ## Configuration
 
 Copy the example env file:
