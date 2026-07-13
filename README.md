@@ -97,6 +97,26 @@ URL / 投稿URL / 元URL
 
 Imported rows are saved as `source=x`, deduplicated by URL, appended to `data/processed/archive.jsonl`, and published to `public/index.html` and `docs/index.html`.
 
+## Automatic X Excel Import
+
+For the GitHub Pages version, put the Cowork workbook here:
+
+```text
+data/input/cowork_x_posts.xlsx
+```
+
+GitHub Actions imports that file automatically after the regular collection job.
+
+Automatic triggers:
+
+```text
+Every 6 hours
+When data/input/cowork_x_posts.xlsx is updated on GitHub
+Manual Run workflow from GitHub Actions
+```
+
+The Excel file is treated as a public source list for this portal. Rows that already exist in `data/processed/archive.jsonl` are skipped by URL, so uploading the same workbook again will not duplicate cards.
+
 ## Configuration
 
 Copy the example env file:

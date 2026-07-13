@@ -9,6 +9,9 @@ __pycache__/
 backup/
 *.xlsx
 *.xls
+!data/input/
+!data/input/*.xlsx
+!data/input/*.xls
 append_gpt_ads.py
 logs/*.log
 data/raw/*.jsonl
