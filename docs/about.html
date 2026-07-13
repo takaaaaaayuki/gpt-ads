@@ -6,19 +6,18 @@
   <title>GPT Ads Portal について</title>
   <style>
     :root {
-      --bg: #ffffff;
+      --bg: #fafafa;
       --surface: #ffffff;
-      --surface-soft: #f5f6f8;
-      --ink: #12141a;
-      --muted: #656b76;
-      --line: #e6e8ec;
-      --line-strong: #d3d7de;
-      --accent: #16224a;
-      --accent-bright: #3454d1;
-      --accent-soft: #eef1fb;
+      --surface-soft: #f5f5f5;
+      --ink: #191919;
+      --muted: #6b6b6b;
+      --line: #e6e6e6;
+      --accent: #0f274d;
+      --accent-soft: #eef2f8;
+      --accent-on-dark: #9db6dd;
+      --dark: #141414;
       --gold: #b7791f;
       --terracotta: #b54708;
-      --shadow: 0 20px 44px rgba(18, 20, 26, 0.08);
     }
     * { box-sizing: border-box; }
     body {
@@ -26,7 +25,6 @@
       font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", "Segoe UI", sans-serif;
       color: var(--ink);
       background: var(--bg);
-      word-break: auto-phrase;
     }
     a { color: inherit; }
     .wrap { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
@@ -46,32 +44,14 @@
       font-weight: 700;
       letter-spacing: 0.06em;
       text-transform: uppercase;
-      color: var(--accent-bright);
+      color: var(--accent);
       margin-bottom: 14px;
     }
     header {
+      color: #fff;
+      background: var(--dark);
       position: relative;
       overflow: hidden;
-      background: var(--bg);
-      border-bottom: 1px solid var(--line);
-    }
-    .hero-motif {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      opacity: 0.5;
-      background-image:
-        radial-gradient(circle at 1px 1px, var(--line-strong) 1px, transparent 0),
-        linear-gradient(120deg, transparent 20%, var(--accent-soft) 48%, transparent 76%);
-      background-size: 24px 24px, 220% 220%;
-      mask-image: linear-gradient(180deg, #000 0%, transparent 92%);
-    }
-    @media (prefers-reduced-motion: no-preference) {
-      .hero-motif { animation: sweep 16s ease-in-out infinite; }
-    }
-    @keyframes sweep {
-      0%, 100% { background-position: 0 0, 0% 0%; }
-      50% { background-position: 0 0, 100% 60%; }
     }
     .nav {
       position: relative;
@@ -88,7 +68,7 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      color: var(--ink);
+      color: #f2f2f2;
       font-size: 13px;
       font-weight: 800;
       text-transform: uppercase;
@@ -100,15 +80,13 @@
       gap: 6px;
       min-height: 36px;
       padding: 8px 13px;
-      color: var(--ink);
-      background: #fff;
-      border: 1px solid var(--line-strong);
+      color: #f2f2f2;
+      border: 1px solid rgba(255, 255, 255, 0.28);
       border-radius: 3px;
       text-decoration: none;
       font-size: 13px;
       font-weight: 700;
     }
-    .nav-link:hover { border-color: var(--accent); color: var(--accent-bright); }
     .hero {
       position: relative;
       z-index: 1;
@@ -117,20 +95,21 @@
       gap: 42px;
       align-items: center;
       padding-top: 40px;
-      padding-bottom: 64px;
+      padding-bottom: 56px;
     }
+    .hero .eyebrow { color: var(--accent-on-dark); }
+    .hero .eyebrow .dot { background: var(--accent-on-dark); }
     h1 {
       margin: 0;
-      font-size: clamp(32px, 4.6vw, 60px);
+      font-size: 48px;
       font-weight: 800;
-      line-height: 1.15;
+      line-height: 1.2;
       max-width: 780px;
-      letter-spacing: -0.015em;
+      letter-spacing: -0.01em;
     }
-    h1 span { white-space: nowrap; }
     .lead {
       margin: 20px 0 0;
-      color: var(--muted);
+      color: #cccccc;
       font-size: 17px;
       line-height: 1.85;
       max-width: 720px;
@@ -148,22 +127,19 @@
       justify-content: center;
       min-height: 44px;
       padding: 10px 16px;
-      border-radius: 5px;
+      border-radius: 3px;
       text-decoration: none;
       font-weight: 700;
       border: 1px solid transparent;
     }
     .button.primary { color: #fff; background: var(--accent); }
-    .button.primary:hover { background: var(--accent-bright); }
-    .button.secondary { color: var(--ink); border-color: var(--line-strong); }
-    .button.secondary:hover { border-color: var(--accent); color: var(--accent-bright); }
+    .button.secondary { color: #f2f2f2; border-color: rgba(255, 255, 255, 0.28); }
     .signal-board {
       background: #fff;
       color: var(--ink);
-      border: 1px solid var(--line);
-      border-radius: 8px;
+      border-radius: 4px;
       padding: 20px;
-      box-shadow: var(--shadow);
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.28);
     }
     .board-head {
       display: flex;
@@ -182,7 +158,7 @@
       gap: 11px;
       align-items: center;
       border: 1px solid var(--line);
-      border-radius: 5px;
+      border-radius: 3px;
       padding: 11px;
       background: var(--surface-soft);
     }
@@ -191,7 +167,7 @@
       height: 30px;
       display: inline-grid;
       place-items: center;
-      border-radius: 5px;
+      border-radius: 3px;
       background: var(--accent-soft);
       color: var(--accent);
       font-weight: 800;
@@ -204,7 +180,7 @@
       display: inline-flex;
       align-items: center;
       padding: 4px 9px;
-      border-radius: 999px;
+      border-radius: 2px;
       background: var(--surface-soft);
       color: var(--ink);
       border: 1px solid var(--line);
@@ -214,7 +190,7 @@
       text-transform: uppercase;
       letter-spacing: 0.04em;
     }
-    main { padding: 64px 0 80px; }
+    main { padding: 60px 0 80px; }
     section + section { margin-top: 72px; }
     .section-head {
       display: flex;
@@ -224,37 +200,40 @@
       margin-bottom: 28px;
       flex-wrap: wrap;
     }
-    h2 { margin: 0; font-size: clamp(24px, 2.8vw, 34px); font-weight: 800; line-height: 1.3; }
+    h2 { margin: 0; font-size: 28px; font-weight: 800; line-height: 1.3; }
     .section-copy { margin: 10px 0 0; color: var(--muted); line-height: 1.85; max-width: 820px; }
-    .stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
-    .stat { background: var(--surface); padding: 20px; border-top: 2px solid var(--accent-bright); }
+    .stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+    .stat { background: var(--surface); padding: 20px; border-top: 2px solid var(--accent); }
     .stat strong { display: block; font-size: 28px; font-weight: 800; line-height: 1; }
     .stat span { color: var(--muted); font-size: 13px; }
-    .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+    .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); }
     .card { background: var(--surface); padding: 26px; }
     .card h3, .rule h3, .cost-box h3 { margin: 0 0 12px; font-size: 17px; font-weight: 800; line-height: 1.45; }
     .card p, .rule p, .cost-box p { margin: 0; color: #333333; line-height: 1.86; }
-    .rule-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+    .rule-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); }
     .rule { background: var(--surface); padding: 26px; }
     .rank {
       width: 32px;
       height: 32px;
       display: inline-grid;
       place-items: center;
-      border-radius: 5px;
+      border-radius: 3px;
       margin-bottom: 12px;
       font-weight: 800;
     }
     .rank-s { background: #fbf1de; color: var(--gold); }
-    .rank-a { background: var(--accent-soft); color: var(--accent-bright); }
+    .rank-a { background: var(--accent-soft); color: var(--accent); }
     .rank-b { background: #fbe9de; color: var(--terracotta); }
     .rank-c { background: var(--surface-soft); color: var(--muted); }
-    .timeline { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+    .timeline { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); }
     .timeline .card { min-height: 172px; }
-    .cost-layout { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; align-items: stretch; }
+    .cost-layout { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 1px; background: var(--line); border: 1px solid var(--line); align-items: stretch; }
     .cost-box { padding: 28px; background: var(--surface); }
-    .cost-box.highlight { background: var(--accent-soft); }
-    .cost-box.highlight h2 { color: var(--accent); }
+    .cost-box.dark { background: var(--dark); color: #f2f2f2; }
+    .cost-box.dark h2 { color: #fff; }
+    .cost-box.dark .section-copy { color: #c9c9c9; }
+    .cost-box.dark .check-list { color: #e6e6e6; }
+    .cost-box.dark .check-list li::before { background: var(--accent-on-dark); }
     .check-list { margin: 14px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; color: #333333; }
     .check-list li { padding-left: 20px; position: relative; line-height: 1.65; }
     .check-list li::before {
@@ -265,29 +244,29 @@
       width: 6px;
       height: 6px;
       border-radius: 1px;
-      background: var(--accent-bright);
+      background: var(--accent);
     }
-    footer { padding: 26px 0 48px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); }
+    footer { padding: 26px 0 48px; color: var(--muted); font-size: 13px; }
     @media (max-width: 900px) {
       .hero { grid-template-columns: 1fr; padding-top: 96px; }
-      .nav { position: absolute; top: 20px; left: 0; right: 0; padding: 0 24px; z-index: 1; }
+      .nav { position: absolute; top: 20px; left: 0; right: 0; padding: 0 24px; }
+      h1 { font-size: 36px; }
       .stats, .cards, .rule-grid, .timeline, .cost-layout { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
   <header>
-    <div class="hero-motif" aria-hidden="true"></div>
     <nav class="nav">
       <div class="wrap nav-inner">
-        <div class="brand"><span class="dot"></span>GPT Ads Intelligence</div>
+        <div class="brand"><span class="dot" style="background:var(--accent-on-dark)"></span>GPT Ads Intelligence</div>
         <a class="nav-link" href="index.html">ポータルを開く</a>
       </div>
     </nav>
     <div class="wrap hero">
       <div>
         <div class="eyebrow"><span class="dot"></span>社内向けリサーチ基盤</div>
-        <h1><span>GPT広告の変化を、</span> <span>人が巡回しなくても</span> <span>追える状態へ。</span></h1>
+        <h1>GPT広告の変化を、人が巡回しなくても追える状態へ。</h1>
         <p class="lead">GPT Ads Portalは、ChatGPT広告、AI検索、生成AIマーケティングに関する情報を自動収集し、広告代理店のリサーチ観点で要約、重要度判定、アーカイブ化する社内ナレッジポータルです。</p>
         <div class="hero-actions">
           <a class="button primary" href="index.html">蓄積された情報を見る</a>
@@ -298,7 +277,7 @@
         <div class="board-head">
           <div>
             <div class="board-title">How it works</div>
-            <div class="board-date">Last updated: 2026年07月13日 04:04</div>
+            <div class="board-date">Last updated: 2026年07月13日 16:14</div>
           </div>
           <span class="tag">Low cost first</span>
         </div>
@@ -429,7 +408,7 @@
 
     <section class="wrap">
       <div class="cost-layout">
-        <div class="cost-box highlight">
+        <div class="cost-box dark">
           <h2>コスト方針</h2>
           <p class="section-copy">有料APIに依存しすぎず、まずは無料で継続できる収集経路を優先しています。Claude APIだけを要約と判断に使う設計です。</p>
           <ul class="check-list">
