@@ -49,22 +49,20 @@ HTML_TEMPLATE = """<!doctype html>
   <title>GPT Ads Portal</title>
   <style>
     :root {
-      --bg: #fafafa;
+      --bg: #ffffff;
       --surface: #ffffff;
-      --surface-soft: #f5f5f5;
-      --ink: #191919;
-      --muted: #6b6b6b;
-      --line: #e6e6e6;
-      --line-strong: #cfcfcf;
-      --accent: #0f274d;
-      --accent-soft: #eef2f8;
-      --accent-on-dark: #9db6dd;
-      --dark: #191919;
-      --dark-soft: #2a2a2a;
+      --surface-soft: #f5f6f8;
+      --ink: #12141a;
+      --muted: #656b76;
+      --line: #e6e8ec;
+      --line-strong: #d3d7de;
+      --accent: #16224a;
+      --accent-bright: #3454d1;
+      --accent-soft: #eef1fb;
       --gold: #b7791f;
       --terracotta: #b54708;
       --youtube: #c0362c;
-      --shadow: 0 16px 36px rgba(0, 0, 0, 0.06);
+      --shadow: 0 20px 44px rgba(18, 20, 26, 0.08);
     }
     * { box-sizing: border-box; }
     body {
@@ -72,6 +70,7 @@ HTML_TEMPLATE = """<!doctype html>
       font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", "Segoe UI", sans-serif;
       color: var(--ink);
       background: var(--bg);
+      word-break: auto-phrase;
     }
     .dot {
       display: inline-block;
@@ -89,17 +88,35 @@ HTML_TEMPLATE = """<!doctype html>
       font-weight: 700;
       letter-spacing: 0.06em;
       text-transform: uppercase;
-      color: var(--accent);
+      color: var(--accent-bright);
     }
     header.masthead {
-      background: var(--dark);
-      color: #fff;
-      padding: 30px 24px 32px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+      overflow: hidden;
+      background: var(--bg);
+      padding: 56px 24px 40px;
+      border-bottom: 1px solid var(--line);
     }
-    header.masthead .eyebrow { color: var(--accent-on-dark); }
-    header.masthead .eyebrow .dot { background: var(--accent-on-dark); }
-    .wrap { max-width: 1180px; margin: 0 auto; }
+    .hero-motif {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.5;
+      background-image:
+        radial-gradient(circle at 1px 1px, var(--line-strong) 1px, transparent 0),
+        linear-gradient(120deg, transparent 20%, var(--accent-soft) 48%, transparent 76%);
+      background-size: 24px 24px, 220% 220%;
+      background-position: 0 0, 0% 0%;
+      mask-image: linear-gradient(180deg, #000 0%, transparent 92%);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .hero-motif { animation: sweep 16s ease-in-out infinite; }
+    }
+    @keyframes sweep {
+      0%, 100% { background-position: 0 0, 0% 0%; }
+      50% { background-position: 0 0, 100% 60%; }
+    }
+    .wrap { max-width: 1180px; margin: 0 auto; position: relative; }
     .top {
       display: flex;
       justify-content: space-between;
@@ -119,47 +136,49 @@ HTML_TEMPLATE = """<!doctype html>
       gap: 6px;
       min-height: 34px;
       padding: 7px 13px;
-      color: #f2f2f2;
-      border: 1px solid rgba(255, 255, 255, 0.28);
-      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--line-strong);
+      background: #fff;
       border-radius: 3px;
       font-size: 13px;
       font-weight: 700;
       text-decoration: none;
     }
-    .nav-link:hover { background: rgba(255, 255, 255, 0.08); }
+    .nav-link:hover { border-color: var(--accent); color: var(--accent-bright); }
     h1 {
-      margin: 12px 0 0;
-      font-size: 36px;
+      margin: 18px 0 0;
+      font-size: clamp(40px, 7.5vw, 92px);
       font-weight: 800;
-      line-height: 1.15;
-      letter-spacing: -0.01em;
+      line-height: 0.98;
+      letter-spacing: -0.02em;
     }
-    .subtitle { margin: 12px 0 0; color: #c9c9c9; font-size: 15px; max-width: 720px; line-height: 1.7; }
+    .subtitle { margin: 18px 0 0; color: var(--muted); font-size: 16px; max-width: 640px; line-height: 1.8; }
+    .subtitle span { white-space: nowrap; }
     .generated {
-      color: #c9c9c9;
+      color: var(--muted);
       font-size: 12px;
       padding: 8px 12px;
-      border: 1px solid rgba(255, 255, 255, 0.16);
+      border: 1px solid var(--line);
       border-radius: 3px;
     }
-    main { padding: 26px 24px 56px; }
+    main { padding: 32px 24px 56px; }
     .toolbar {
       display: grid;
       grid-template-columns: minmax(260px, 1fr) minmax(135px, 170px) minmax(135px, 170px) minmax(160px, 210px) minmax(120px, 150px);
       gap: 10px;
-      margin: 0 0 22px;
+      margin: 0 0 26px;
       align-items: center;
       background: var(--surface);
       border: 1px solid var(--line);
-      border-radius: 4px;
+      border-radius: 8px;
       padding: 14px;
+      box-shadow: var(--shadow);
     }
     input, select {
       width: 100%;
       min-height: 42px;
       border: 1px solid var(--line);
-      border-radius: 3px;
+      border-radius: 5px;
       padding: 9px 11px;
       background: #fff;
       color: var(--ink);
@@ -167,7 +186,7 @@ HTML_TEMPLATE = """<!doctype html>
       outline: none;
     }
     input:focus, select:focus {
-      border-color: var(--accent);
+      border-color: var(--accent-bright);
       box-shadow: 0 0 0 3px var(--accent-soft);
     }
     .stats {
@@ -176,14 +195,16 @@ HTML_TEMPLATE = """<!doctype html>
       gap: 1px;
       background: var(--line);
       border: 1px solid var(--line);
-      margin-bottom: 26px;
+      margin-bottom: 30px;
+      border-radius: 8px;
+      overflow: hidden;
     }
     .stat {
       background: var(--surface);
-      padding: 18px 16px;
-      border-top: 2px solid var(--accent);
+      padding: 20px 18px;
+      border-top: 2px solid var(--accent-bright);
     }
-    .stat strong { display: block; font-size: 26px; font-weight: 800; line-height: 1; }
+    .stat strong { display: block; font-size: 30px; font-weight: 800; line-height: 1; letter-spacing: -0.01em; }
     .stat span { color: var(--muted); font-size: 12px; }
     .grid {
       display: grid;
@@ -191,15 +212,21 @@ HTML_TEMPLATE = """<!doctype html>
       gap: 1px;
       background: var(--line);
       border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
     }
     article {
       background: var(--surface);
-      padding: 20px;
+      padding: 22px;
       display: flex;
       flex-direction: column;
       gap: 12px;
       min-width: 0;
     }
+    @media (prefers-reduced-motion: no-preference) {
+      article { transition: background-color 0.15s ease; }
+    }
+    article:hover { background: var(--surface-soft); }
     .meta {
       display: flex;
       gap: 16px;
@@ -220,14 +247,19 @@ HTML_TEMPLATE = """<!doctype html>
     .meta-item.source-youtube { color: var(--youtube); }
     .meta-item.source-x .dot { background: #101828; }
     .meta-item.source-x { color: #101828; }
+    .meta-item[class*="importance-"] {
+      padding: 4px 10px 4px 8px;
+      border-radius: 999px;
+      font-size: 11.5px;
+    }
     .meta-item.importance-S .dot { background: var(--gold); }
-    .meta-item.importance-S { color: var(--gold); }
-    .meta-item.importance-A .dot { background: var(--accent); }
-    .meta-item.importance-A { color: var(--accent); }
+    .meta-item.importance-S { color: #8a5a12; background: #fbf1de; }
+    .meta-item.importance-A .dot { background: var(--accent-bright); }
+    .meta-item.importance-A { color: var(--accent-bright); background: var(--accent-soft); }
     .meta-item.importance-B .dot { background: var(--terracotta); }
-    .meta-item.importance-B { color: var(--terracotta); }
+    .meta-item.importance-B { color: var(--terracotta); background: #fbe9de; }
     .meta-item.importance-C .dot { background: var(--muted); }
-    .meta-item.importance-C { color: var(--muted); }
+    .meta-item.importance-C { color: var(--muted); background: var(--surface-soft); }
     .topic-tags {
       display: flex;
       gap: 6px;
@@ -238,8 +270,8 @@ HTML_TEMPLATE = """<!doctype html>
       display: inline-flex;
       align-items: center;
       min-height: 22px;
-      padding: 2px 8px;
-      border-radius: 2px;
+      padding: 2px 9px;
+      border-radius: 999px;
       background: var(--surface-soft);
       color: #3a3a3a;
       border: 1px solid var(--line);
@@ -260,7 +292,7 @@ HTML_TEMPLATE = """<!doctype html>
       gap: 10px;
       flex-wrap: wrap;
     }
-    p { margin: 0; color: #333333; line-height: 1.75; }
+    p { margin: 0; color: #333333; line-height: 1.75; overflow-wrap: anywhere; }
     ul { margin: 0; padding-left: 18px; color: #333333; line-height: 1.6; }
     li + li { margin-top: 5px; }
     .source-link {
@@ -268,7 +300,7 @@ HTML_TEMPLATE = """<!doctype html>
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      color: var(--accent);
+      color: var(--accent-bright);
       font-weight: 700;
       text-decoration: none;
       overflow-wrap: anywhere;
@@ -282,23 +314,27 @@ HTML_TEMPLATE = """<!doctype html>
       color: var(--muted);
       grid-column: 1 / -1;
     }
-    @media (max-width: 780px) {
-      header.masthead { padding: 22px 16px; }
-      main { padding: 18px 16px; }
+    @media (max-width: 880px) {
+      header.masthead { padding: 40px 18px 32px; }
+      main { padding: 22px 16px; }
+      .toolbar { grid-template-columns: 1fr 1fr; }
+      .grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      header.masthead { padding: 32px 16px 28px; }
       .toolbar { grid-template-columns: 1fr; }
       .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .grid { grid-template-columns: 1fr; }
-      h1 { font-size: 27px; }
     }
   </style>
 </head>
 <body>
   <header class="masthead">
+    <div class="hero-motif" aria-hidden="true"></div>
     <div class="wrap top">
       <div>
         <div class="eyebrow"><span class="dot"></span>GPT Ads Intelligence</div>
-        <h1>GPT Ads Portal</h1>
-        <p class="subtitle">ChatGPT広告、AI検索、生成AIマーケティングの動きを追うリサーチポータル</p>
+        <h1>GPT Ads<br>Portal</h1>
+        <p class="subtitle"><span>ChatGPT広告、AI検索、</span> <span>生成AIマーケティングの</span> <span>動きを追うリサーチポータル</span></p>
       </div>
       <div class="header-actions">
         <a class="nav-link" href="about.html">このポータルについて <span>→</span></a>
@@ -472,18 +508,19 @@ ABOUT_TEMPLATE = """<!doctype html>
   <title>GPT Ads Portal について</title>
   <style>
     :root {
-      --bg: #fafafa;
+      --bg: #ffffff;
       --surface: #ffffff;
-      --surface-soft: #f5f5f5;
-      --ink: #191919;
-      --muted: #6b6b6b;
-      --line: #e6e6e6;
-      --accent: #0f274d;
-      --accent-soft: #eef2f8;
-      --accent-on-dark: #9db6dd;
-      --dark: #141414;
+      --surface-soft: #f5f6f8;
+      --ink: #12141a;
+      --muted: #656b76;
+      --line: #e6e8ec;
+      --line-strong: #d3d7de;
+      --accent: #16224a;
+      --accent-bright: #3454d1;
+      --accent-soft: #eef1fb;
       --gold: #b7791f;
       --terracotta: #b54708;
+      --shadow: 0 20px 44px rgba(18, 20, 26, 0.08);
     }
     * { box-sizing: border-box; }
     body {
@@ -491,6 +528,7 @@ ABOUT_TEMPLATE = """<!doctype html>
       font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", "Segoe UI", sans-serif;
       color: var(--ink);
       background: var(--bg);
+      word-break: auto-phrase;
     }
     a { color: inherit; }
     .wrap { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
@@ -510,14 +548,32 @@ ABOUT_TEMPLATE = """<!doctype html>
       font-weight: 700;
       letter-spacing: 0.06em;
       text-transform: uppercase;
-      color: var(--accent);
+      color: var(--accent-bright);
       margin-bottom: 14px;
     }
     header {
-      color: #fff;
-      background: var(--dark);
       position: relative;
       overflow: hidden;
+      background: var(--bg);
+      border-bottom: 1px solid var(--line);
+    }
+    .hero-motif {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.5;
+      background-image:
+        radial-gradient(circle at 1px 1px, var(--line-strong) 1px, transparent 0),
+        linear-gradient(120deg, transparent 20%, var(--accent-soft) 48%, transparent 76%);
+      background-size: 24px 24px, 220% 220%;
+      mask-image: linear-gradient(180deg, #000 0%, transparent 92%);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .hero-motif { animation: sweep 16s ease-in-out infinite; }
+    }
+    @keyframes sweep {
+      0%, 100% { background-position: 0 0, 0% 0%; }
+      50% { background-position: 0 0, 100% 60%; }
     }
     .nav {
       position: relative;
@@ -534,7 +590,7 @@ ABOUT_TEMPLATE = """<!doctype html>
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      color: #f2f2f2;
+      color: var(--ink);
       font-size: 13px;
       font-weight: 800;
       text-transform: uppercase;
@@ -546,13 +602,15 @@ ABOUT_TEMPLATE = """<!doctype html>
       gap: 6px;
       min-height: 36px;
       padding: 8px 13px;
-      color: #f2f2f2;
-      border: 1px solid rgba(255, 255, 255, 0.28);
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid var(--line-strong);
       border-radius: 3px;
       text-decoration: none;
       font-size: 13px;
       font-weight: 700;
     }
+    .nav-link:hover { border-color: var(--accent); color: var(--accent-bright); }
     .hero {
       position: relative;
       z-index: 1;
@@ -561,21 +619,20 @@ ABOUT_TEMPLATE = """<!doctype html>
       gap: 42px;
       align-items: center;
       padding-top: 40px;
-      padding-bottom: 56px;
+      padding-bottom: 64px;
     }
-    .hero .eyebrow { color: var(--accent-on-dark); }
-    .hero .eyebrow .dot { background: var(--accent-on-dark); }
     h1 {
       margin: 0;
-      font-size: 48px;
+      font-size: clamp(32px, 4.6vw, 60px);
       font-weight: 800;
-      line-height: 1.2;
+      line-height: 1.15;
       max-width: 780px;
-      letter-spacing: -0.01em;
+      letter-spacing: -0.015em;
     }
+    h1 span { white-space: nowrap; }
     .lead {
       margin: 20px 0 0;
-      color: #cccccc;
+      color: var(--muted);
       font-size: 17px;
       line-height: 1.85;
       max-width: 720px;
@@ -593,19 +650,22 @@ ABOUT_TEMPLATE = """<!doctype html>
       justify-content: center;
       min-height: 44px;
       padding: 10px 16px;
-      border-radius: 3px;
+      border-radius: 5px;
       text-decoration: none;
       font-weight: 700;
       border: 1px solid transparent;
     }
     .button.primary { color: #fff; background: var(--accent); }
-    .button.secondary { color: #f2f2f2; border-color: rgba(255, 255, 255, 0.28); }
+    .button.primary:hover { background: var(--accent-bright); }
+    .button.secondary { color: var(--ink); border-color: var(--line-strong); }
+    .button.secondary:hover { border-color: var(--accent); color: var(--accent-bright); }
     .signal-board {
       background: #fff;
       color: var(--ink);
-      border-radius: 4px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
       padding: 20px;
-      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.28);
+      box-shadow: var(--shadow);
     }
     .board-head {
       display: flex;
@@ -624,7 +684,7 @@ ABOUT_TEMPLATE = """<!doctype html>
       gap: 11px;
       align-items: center;
       border: 1px solid var(--line);
-      border-radius: 3px;
+      border-radius: 5px;
       padding: 11px;
       background: var(--surface-soft);
     }
@@ -633,7 +693,7 @@ ABOUT_TEMPLATE = """<!doctype html>
       height: 30px;
       display: inline-grid;
       place-items: center;
-      border-radius: 3px;
+      border-radius: 5px;
       background: var(--accent-soft);
       color: var(--accent);
       font-weight: 800;
@@ -646,7 +706,7 @@ ABOUT_TEMPLATE = """<!doctype html>
       display: inline-flex;
       align-items: center;
       padding: 4px 9px;
-      border-radius: 2px;
+      border-radius: 999px;
       background: var(--surface-soft);
       color: var(--ink);
       border: 1px solid var(--line);
@@ -656,7 +716,7 @@ ABOUT_TEMPLATE = """<!doctype html>
       text-transform: uppercase;
       letter-spacing: 0.04em;
     }
-    main { padding: 60px 0 80px; }
+    main { padding: 64px 0 80px; }
     section + section { margin-top: 72px; }
     .section-head {
       display: flex;
@@ -666,40 +726,37 @@ ABOUT_TEMPLATE = """<!doctype html>
       margin-bottom: 28px;
       flex-wrap: wrap;
     }
-    h2 { margin: 0; font-size: 28px; font-weight: 800; line-height: 1.3; }
+    h2 { margin: 0; font-size: clamp(24px, 2.8vw, 34px); font-weight: 800; line-height: 1.3; }
     .section-copy { margin: 10px 0 0; color: var(--muted); line-height: 1.85; max-width: 820px; }
-    .stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); }
-    .stat { background: var(--surface); padding: 20px; border-top: 2px solid var(--accent); }
+    .stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+    .stat { background: var(--surface); padding: 20px; border-top: 2px solid var(--accent-bright); }
     .stat strong { display: block; font-size: 28px; font-weight: 800; line-height: 1; }
     .stat span { color: var(--muted); font-size: 13px; }
-    .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+    .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
     .card { background: var(--surface); padding: 26px; }
     .card h3, .rule h3, .cost-box h3 { margin: 0 0 12px; font-size: 17px; font-weight: 800; line-height: 1.45; }
     .card p, .rule p, .cost-box p { margin: 0; color: #333333; line-height: 1.86; }
-    .rule-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+    .rule-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
     .rule { background: var(--surface); padding: 26px; }
     .rank {
       width: 32px;
       height: 32px;
       display: inline-grid;
       place-items: center;
-      border-radius: 3px;
+      border-radius: 5px;
       margin-bottom: 12px;
       font-weight: 800;
     }
     .rank-s { background: #fbf1de; color: var(--gold); }
-    .rank-a { background: var(--accent-soft); color: var(--accent); }
+    .rank-a { background: var(--accent-soft); color: var(--accent-bright); }
     .rank-b { background: #fbe9de; color: var(--terracotta); }
     .rank-c { background: var(--surface-soft); color: var(--muted); }
-    .timeline { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+    .timeline { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
     .timeline .card { min-height: 172px; }
-    .cost-layout { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 1px; background: var(--line); border: 1px solid var(--line); align-items: stretch; }
+    .cost-layout { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; align-items: stretch; }
     .cost-box { padding: 28px; background: var(--surface); }
-    .cost-box.dark { background: var(--dark); color: #f2f2f2; }
-    .cost-box.dark h2 { color: #fff; }
-    .cost-box.dark .section-copy { color: #c9c9c9; }
-    .cost-box.dark .check-list { color: #e6e6e6; }
-    .cost-box.dark .check-list li::before { background: var(--accent-on-dark); }
+    .cost-box.highlight { background: var(--accent-soft); }
+    .cost-box.highlight h2 { color: var(--accent); }
     .check-list { margin: 14px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; color: #333333; }
     .check-list li { padding-left: 20px; position: relative; line-height: 1.65; }
     .check-list li::before {
@@ -710,29 +767,29 @@ ABOUT_TEMPLATE = """<!doctype html>
       width: 6px;
       height: 6px;
       border-radius: 1px;
-      background: var(--accent);
+      background: var(--accent-bright);
     }
-    footer { padding: 26px 0 48px; color: var(--muted); font-size: 13px; }
+    footer { padding: 26px 0 48px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); }
     @media (max-width: 900px) {
       .hero { grid-template-columns: 1fr; padding-top: 96px; }
-      .nav { position: absolute; top: 20px; left: 0; right: 0; padding: 0 24px; }
-      h1 { font-size: 36px; }
+      .nav { position: absolute; top: 20px; left: 0; right: 0; padding: 0 24px; z-index: 1; }
       .stats, .cards, .rule-grid, .timeline, .cost-layout { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
   <header>
+    <div class="hero-motif" aria-hidden="true"></div>
     <nav class="nav">
       <div class="wrap nav-inner">
-        <div class="brand"><span class="dot" style="background:var(--accent-on-dark)"></span>GPT Ads Intelligence</div>
+        <div class="brand"><span class="dot"></span>GPT Ads Intelligence</div>
         <a class="nav-link" href="index.html">ポータルを開く</a>
       </div>
     </nav>
     <div class="wrap hero">
       <div>
         <div class="eyebrow"><span class="dot"></span>社内向けリサーチ基盤</div>
-        <h1>GPT広告の変化を、人が巡回しなくても追える状態へ。</h1>
+        <h1><span>GPT広告の変化を、</span> <span>人が巡回しなくても</span> <span>追える状態へ。</span></h1>
         <p class="lead">GPT Ads Portalは、ChatGPT広告、AI検索、生成AIマーケティングに関する情報を自動収集し、広告代理店のリサーチ観点で要約、重要度判定、アーカイブ化する社内ナレッジポータルです。</p>
         <div class="hero-actions">
           <a class="button primary" href="index.html">蓄積された情報を見る</a>
@@ -874,7 +931,7 @@ ABOUT_TEMPLATE = """<!doctype html>
 
     <section class="wrap">
       <div class="cost-layout">
-        <div class="cost-box dark">
+        <div class="cost-box highlight">
           <h2>コスト方針</h2>
           <p class="section-copy">有料APIに依存しすぎず、まずは無料で継続できる収集経路を優先しています。Claude APIだけを要約と判断に使う設計です。</p>
           <ul class="check-list">
