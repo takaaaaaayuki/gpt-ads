@@ -67,8 +67,10 @@ def run(send_slack: bool = False, demo: bool = False, skip_x: bool = False, x_on
     write_jsonl(raw_path, collected)
 
     archive = load_archive()
-    archive_ids = {item.stable_id for item in archive}
-    unique = [item for item in dedupe_items(collected) if item.stable_id not in archive_ids]
+    collected_unique = dedupe_items(collected)
+    combined_unique = dedupe_items(archive + collected_unique)
+    collected_ids = {id(item) for item in collected_unique}
+    unique = [item for item in combined_unique if id(item) in collected_ids]
     summarized = summarize_items(unique, options.max_items_per_run)
     archive = merge_archive(archive, summarized)
 

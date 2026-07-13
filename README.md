@@ -95,7 +95,9 @@ URL / 投稿URL / 元URL
 いいね数 / リポスト数 / 返信数
 ```
 
-Imported rows are saved as `source=x`, deduplicated by URL, appended to `data/processed/archive.jsonl`, and published to `public/index.html` and `docs/index.html`.
+Imported rows are saved as `source=x`, deduplicated, appended to `data/processed/archive.jsonl`, and published to `public/index.html` and `docs/index.html`.
+
+Deduplication checks both URL and normalized title. This prevents Google News RSS or YouTube from storing the same story multiple times when the source URL differs but the title/content is effectively the same.
 
 ## Automatic X Excel Import
 

@@ -43,8 +43,9 @@ def import_x_excel(path: Path, sheet: str | None = None, dry_run: bool = False) 
     items = dedupe_items(items)
 
     archive = load_archive()
-    archive_ids = {item.stable_id for item in archive}
-    new_items = [item for item in items if item.stable_id not in archive_ids]
+    combined_unique = dedupe_items(archive + items)
+    item_ids = {id(item) for item in items}
+    new_items = [item for item in combined_unique if id(item) in item_ids]
     if dry_run:
         return len(items), len(new_items)
 
